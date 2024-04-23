@@ -1,3 +1,5 @@
+from ingredients import store_ingredient
+from recipes import new_recipe
 
 # Print measurements to help with aligning
 print_width = 50
@@ -21,11 +23,13 @@ def print_goodbye():
 
 # Load menu for user interaction
 def create_menu():
-    print("\n**************************************************")
+    print("\n")
+    print("*" * 19 + " Main Menu " + "*" * 20)
+    # print("**************************************************")
     print("A. Add New Recipe") # Add a new recipe to the list
     print("B. Add Random Recipe") # Add a random recipe to the list
     print("C. Generate Recipe Using My Ingredients") # Generate a recipe using ingredients from the stored ingredient list
-    print("D. Store My Ingredients") # Add ingredients found at home
+    print("D. My Ingredients") # Add ingredients found at home
     print("E. Delete Recipe") # Delete a recipe from the list
     print("F. View Recipes") # Allows the use to view and print recipe
     print("X. Exit") # Exits app
@@ -36,7 +40,7 @@ def create_menu():
 # App starts here
 print_inital_welcome()
 
-# Loop menu until user exits
+# Loop menu until user exitsa
 choice = ""
 while choice != "x":
     choice = create_menu()
@@ -45,7 +49,7 @@ while choice != "x":
     match choice:
         # Add new recipe
         case "a":
-            print("")
+            new_recipe() # TODO - return set
 
         # Add random recipe
         case "b":
@@ -57,7 +61,7 @@ while choice != "x":
 
         # Store my ingredients
         case "d":
-            print("")
+            store_ingredient(False)
 
         # Delete recipe
         case "e":
