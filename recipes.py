@@ -1,6 +1,7 @@
 import readline
 import textwrap
 import csv
+import os
 
 # Local modules
 from ingredients import store_ingredient
@@ -106,6 +107,7 @@ def recipes_sub_menu(current_recipe):
     print(f"F. Serving Size: {current_recipe.get_serves()}") # Add a serving size
     print(f"G. Add Description: {current_recipe.get_description()}") # Add a description
     print("S. Submit & Save") # Submits recipe
+    print("X. Cancel") # Exit recipe menu
 
     return input("Enter Selection: ").lower()
 
@@ -122,13 +124,16 @@ def method_sub_menu():
 def write_to_csv(current_recipe, file_name):
     try:
         print("Writing to csv...")
+        file_exists = os.path.isfile(file_name)
 
-        with open(file_name, mode="w", newline="") as file:
+        with open(file_name, mode="a", newline="") as file:
             writer = csv.writer(file)
 
-            # Write header
-            writer.writerow(["Name", "Ingredients", "Prep Time", 
-                                "Cook Time", "Serving Size", "Description"])
+            # Write header only if the file doesn't exist
+            if not file_exists:
+                # Write header
+                writer.writerow(["Name", "Ingredients", "Prep Time", 
+                                    "Cook Time", "Serving Size", "Description"])
 
             # Write recipe details
             writer.writerow([
@@ -142,29 +147,6 @@ def write_to_csv(current_recipe, file_name):
 
     except IOError:
         print(f"Error writing to '{file_name}'")
-print doesnt work yet
-
-# Read from csv at the start
-def read_from_csv(current_recipe, file_name):
-    current_recipe = set()  # Set of ingredients
-
-    try:
-        with open(file_name, mode="r") as file:
-            reader = csv.reader(file)
-            next(reader)  # Skip header row
-
-# name="", ingredients="", prepare_time="", 
-#                  cook_time="", serves="", description="
-            for row in reader:
-                name, ingredients, prep_time, cook_time, serves, description = row
-                current_recipe.add(Recipes(name, ingredients, 
-                                           prep_time, cook_time, serves, description))
-
-    except FileNotFoundError:
-        print(f"Error: File '{file_name}' not found.")
-        print("Creating New File...")
-    
-    return current_recipe
 
 # Wraps the method into 50 chartacters when saved
 def wrap_input(prompt, width=50):
@@ -278,7 +260,7 @@ def new_recipe():
 
     # Loop menu until user exits
     choice = ""
-    while choice != "s":
+    while choice not in ["s", "x"]:
         choice = recipes_sub_menu(current_recipe)
 
         # Add switch case to decide selection
@@ -309,7 +291,7 @@ def new_recipe():
 
             # Add description
             case "g":
-                current_recipe.set_description(input("Desctipion: "))
+                current_recipe.set_description(input("Description: "))
             
              # Submits recipe to csv
             case "s":
@@ -319,7 +301,10 @@ def new_recipe():
                 else:
                     # Don't exit this menu is it is unable to save
                     choice = -1
-                    print("Recipe name is required.")       
+                    print("Error - Recipe name is required.") 
+
+            case "x":
+                break  
 
             case _:
                 print("Error - invalid selection!")

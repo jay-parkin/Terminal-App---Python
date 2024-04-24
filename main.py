@@ -1,5 +1,6 @@
+import csv
 from ingredients import store_ingredient
-from recipes import new_recipe
+from recipes import new_recipe, Recipes
 
 # Print measurements to help with aligning
 print_width = 50
@@ -36,6 +37,38 @@ def create_menu():
 
     return input("Enter Selection: ").lower()
 
+# Read from csv at the start
+def read_from_csv(file_name):
+    all_recipes = set()  # Set of ingredients
+
+    try:
+        with open(file_name, mode="r") as file:
+            reader = csv.reader(file)
+            next(reader)  # Skip header row
+
+            for row in reader:
+                name, ingredients, prep_time, cook_time, serves, description = row
+                all_recipes.add(Recipes(name, ingredients, prep_time, 
+                                        cook_time, serves, description))
+
+    except FileNotFoundError:
+        print(f"Error: File '{file_name}' not found.")
+        print("Creating New File...")
+    
+    return all_recipes
+
+def view_recipes():
+    print("\n")
+    print("*" * 18 + " View Recipes " + "*" * 18)
+    all_recipes = read_from_csv("my_recipes.csv")
+    
+    count = 0
+    for recipe in all_recipes:
+        count += 1
+        print(f"{count}: {recipe.get_name()}")
+        
+    print("\n")
+    choice = input("Enter which Recipe to view: ")
 
 # App starts here
 print_inital_welcome()
@@ -49,7 +82,7 @@ while choice != "x":
     match choice:
         # Add new recipe
         case "a":
-            new_recipe() # TODO - return set
+            new_recipe()
 
         # Add random recipe
         case "b":
@@ -67,9 +100,9 @@ while choice != "x":
         case "e":
             print("")
 
-        # View recipes
+        # View recipes // read csv
         case "f":
-            print("")
+            view_recipes()
 
         # Exit app
         case "x":
