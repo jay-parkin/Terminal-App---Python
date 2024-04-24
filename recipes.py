@@ -1,6 +1,7 @@
 
 from ingredients import store_ingredient
 import readline
+import textwrap
 
 class Recipes():
     def __init__(self, name="", ingredients="", prepare_time="", 
@@ -103,15 +104,27 @@ def method_sub_menu():
     print("*" * 21 + " Method " + "*" * 21)
     print("A. Add Step") # Add a new steps
     print("B. Edit Step") # Edit a step
-    print("S. Submit & Save") # Submit method
+    print("S. Submit") # Submit method
 
     return input("Enter Selection: ").lower()
 
+# Wraps the method into 50 chartacters when saved
+def wrap_input(prompt, width=50):
+    # Display the prompt and get user input
+    user_input = input(prompt)
+
+    # Wrap the input text horizontally to the specified width
+    wrapped_lines = [user_input[i:i+width] for i in range(0, len(user_input), width)]
+    wrapped_input = "\n".join(wrapped_lines)
+
+    return wrapped_input
+
+# Add a new step to the method
 def add_step(steps_count, current_recipe):
-    next_step = f"Step: {steps_count}"
+    next_step = f"Step {steps_count}:"
     print(f"\n{next_step}")
 
-    method_step = input("Enter Step: ")
+    method_step = wrap_input("Enter Step: ")
     current_recipe.set_method(f"{next_step}\n{method_step}")
 
 # Allow user to edit method
@@ -120,12 +133,12 @@ def edit_step(current_recipe):
 
     for method in current_recipe.get_methods():
         print("\n")
-        print(method)
+        print(textwrap.fill(method, width=50))
 
     # Find the item index of the method
     while True:
         try:
-            removed_step = int(input("Which step would you like to edit (Enter 0 to cancel): "))
+            removed_step = int(input("Which step would you like to edit (0 to cancel): "))
 
             if removed_step < 0 or removed_step > len(methods):
                 print(f"Error - Step {removed_step} doesn't exist.")
@@ -136,52 +149,39 @@ def edit_step(current_recipe):
             print("Error - Please enter a number.")
 
     if removed_step != 0:
-        # Add new step as normal
-        edit_step = f"Step: {removed_step}"
+        # Edit the selected step
+        edit_step = f"Step {removed_step}:"
         print(f"\n{edit_step}")
 
-        current_edit = methods[removed_step - 1].split("\n")[1]
-        method_step = input_with_prefill("Enter Step: ", f"{current_edit}")
-        methods[removed_step - 1] =  f"{edit_step}{method_step}"
+        # Remove leading/trailing whitespace
+        current_edit = methods[removed_step - 1].split(":")[1].strip()  
+        
+        # Wrap the line to fit within 50 characters
+        wrapped_edit = textwrap.fill(current_edit, width=50)
+        method_step = input_with_prefill("Enter Step: \n", f"{wrapped_edit}")
 
+        # Strip extra newline characters
+        methods[removed_step - 1] = f"{edit_step}\n{method_step.strip()}" 
 
-
-def input_with_prefill(prompt, text):
+#  Prefill the input with the last text, to allow the user to edit what exists
+def input_with_prefill(prompt, text, width=50):
     def hook():
-        readline.insert_text(text)
+        # Split text into lines and strip leading/trailing whitespace
+        lines = [line.strip() for line in text.split("\n")]
+        # Wrap each line to specified width
+        wrapped_lines = [textwrap.fill(line, width=width) for line in lines]
+        # Join wrapped lines
+        wrapped_text = "\n".join(wrapped_lines)
+        readline.insert_text(wrapped_text)
         readline.redisplay()
+    
     readline.set_pre_input_hook(hook)
     result = input(prompt)
     readline.set_pre_input_hook()
     return result
 
 
-# def edit_step(current_recipe):
-#     for method in current_recipe.get_methods():
-#         print("\n")
-#         print(method)
-
-#     # Find the item index of the method
-#     removed_step = -1
-#     # While input if greater than the length, continue to ask to lower the step number
-#     while removed_step < 0 or removed_step >= len(current_recipe.get_methods()):
-#         print("\n")
-#         removed_step = int(input("Which step would like to edit: "))
-
-#         # Input is higher then length of steps
-#         if removed_step < 0 or removed_step > len(current_recipe.get_methods()):
-#             print(f"Error - This step doesn't exist: {len(current_recipe.get_methods())}")
-#         else:
-#             # Add new step as normal
-#             edit_step = f"Step: {removed_step}"
-#             print(f"\n{edit_step}")
-
-#             method_step = input("Enter Step: ")
-#             current_recipe.get_methods[removed_step] =  f"{edit_step}\n{method_step}"
-
-
 def new_method(current_recipe):
-
     # Init method list
     method_steps = []
     steps_count = 0 # Load from previous method
