@@ -1,7 +1,9 @@
-
-from ingredients import store_ingredient
 import readline
 import textwrap
+import csv
+
+# Local modules
+from ingredients import store_ingredient
 
 class Recipes():
     def __init__(self, name="", ingredients="", prepare_time="", 
@@ -52,6 +54,15 @@ class Recipes():
         if method:
             self._methods.append(method)
 
+    # Gets the amount of steps to display
+    def get_step_count(self):
+        step_count = len(self._methods)
+        
+        if step_count == 1:
+            return f"{step_count} Step"
+
+        return f"{step_count} Steps"
+
     # Getter and setter for prepare time
     def get_prepare_time(self):
         return self._prepare_time
@@ -80,7 +91,6 @@ class Recipes():
     def set_description(self, description):
         self._description = description
 
-
 def recipes_sub_menu(current_recipe):
     print("\n")
     print("*" * 19 + " New Recipe " + "*" * 19)
@@ -90,7 +100,7 @@ def recipes_sub_menu(current_recipe):
     ingredients_str = ', '.join(ingredients_list)
     print(f"B. Add Ingredients: {ingredients_str}") # Add a name // sub menu
 
-    print("C. Add Method: ") # Add Methods // sub menu
+    print(f"C. Add Method: {current_recipe.get_step_count()}") # Add Methods // sub menu
     print(f"D. Add Prep Time: {current_recipe.get_prepare_time()}") # Add a prepare time
     print(f"E. Add Cook Time: {current_recipe.get_cook_time()}") # Add a cook time
     print(f"F. Serving Size: {current_recipe.get_serves()}") # Add a serving size
@@ -107,6 +117,54 @@ def method_sub_menu():
     print("S. Submit") # Submit method
 
     return input("Enter Selection: ").lower()
+
+# Store recipe into a csv with headers
+def write_to_csv(current_recipe, file_name):
+    try:
+        print("Writing to csv...")
+
+        with open(file_name, mode="w", newline="") as file:
+            writer = csv.writer(file)
+
+            # Write header
+            writer.writerow(["Name", "Ingredients", "Prep Time", 
+                                "Cook Time", "Serving Size", "Description"])
+
+            # Write recipe details
+            writer.writerow([
+                current_recipe.get_name(),
+                ', '.join(current_recipe.get_ingredients()),
+                current_recipe.get_prepare_time(),
+                current_recipe.get_cook_time(),
+                current_recipe.get_serves(),
+                current_recipe.get_description()
+            ])
+
+    except IOError:
+        print(f"Error writing to '{file_name}'")
+print doesnt work yet
+
+# Read from csv at the start
+def read_from_csv(current_recipe, file_name):
+    current_recipe = set()  # Set of ingredients
+
+    try:
+        with open(file_name, mode="r") as file:
+            reader = csv.reader(file)
+            next(reader)  # Skip header row
+
+# name="", ingredients="", prepare_time="", 
+#                  cook_time="", serves="", description="
+            for row in reader:
+                name, ingredients, prep_time, cook_time, serves, description = row
+                current_recipe.add(Recipes(name, ingredients, 
+                                           prep_time, cook_time, serves, description))
+
+    except FileNotFoundError:
+        print(f"Error: File '{file_name}' not found.")
+        print("Creating New File...")
+    
+    return current_recipe
 
 # Wraps the method into 50 chartacters when saved
 def wrap_input(prompt, width=50):
@@ -149,13 +207,15 @@ def edit_step(current_recipe):
             print("Error - Please enter a number.")
 
     if removed_step != 0:
+        print("\n")
+        print("*" * 22 + " Edit " + "*" * 22)
         # Edit the selected step
         edit_step = f"Step {removed_step}:"
         print(f"\n{edit_step}")
 
         # Remove leading/trailing whitespace
         current_edit = methods[removed_step - 1].split(":")[1].strip()  
-        
+
         # Wrap the line to fit within 50 characters
         wrapped_edit = textwrap.fill(current_edit, width=50)
         method_step = input_with_prefill("Enter Step: \n", f"{wrapped_edit}")
@@ -180,11 +240,10 @@ def input_with_prefill(prompt, text, width=50):
     readline.set_pre_input_hook()
     return result
 
-
 def new_method(current_recipe):
     # Init method list
-    method_steps = []
-    steps_count = 0 # Load from previous method
+    method_steps = current_recipe.get_methods()
+    steps_count = len(current_recipe.get_methods()) # Load from previous method
 
     # Loop menu until user exits
     choice = ""
@@ -204,13 +263,15 @@ def new_method(current_recipe):
 
             # Submits methods to recipe
             case "s":
-                print("")
+                break
 
             case _:
                 print("Error - invalid selection!")
 
-
 def new_recipe():
+    # Stored locally
+    file_name = "my_recipes.csv"
+
     # initialise an empty object
     current_recipe = Recipes()
     ingredients_set = set() # Set of ingredients
@@ -252,8 +313,13 @@ def new_recipe():
             
              # Submits recipe to csv
             case "s":
-                current_recipe.display_recipe()
-                # write_to_csv(ingredients_set, file_name)              
+                # If a name exist than the recipe exist
+                if current_recipe.get_name():
+                    write_to_csv(current_recipe, file_name) 
+                else:
+                    # Don't exit this menu is it is unable to save
+                    choice = -1
+                    print("Recipe name is required.")       
 
             case _:
                 print("Error - invalid selection!")
