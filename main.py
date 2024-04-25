@@ -39,7 +39,7 @@ def create_menu():
 
 # Read from csv at the start
 def read_from_csv(file_name):
-    all_recipes = set()  # Set of ingredients
+    all_recipes = [] # list of ingredients
 
     try:
         with open(file_name, mode="r") as file:
@@ -48,7 +48,7 @@ def read_from_csv(file_name):
 
             for row in reader:
                 name, ingredients, prep_time, cook_time, serves, description = row
-                all_recipes.add(Recipes(name, ingredients, prep_time, 
+                all_recipes.append(Recipes(name, ingredients, prep_time, 
                                         cook_time, serves, description))
 
     except FileNotFoundError:
@@ -56,6 +56,20 @@ def read_from_csv(file_name):
         print("Creating New File...")
     
     return all_recipes
+
+def display_recipe(choice):
+    # only used to adjust the title length
+    choice_str = str(choice)
+    choice_len = len(choice_str)
+    title_spacing = 50 - int((choice_len + 9)) # 9 is the length of the word ' Recipe '
+    half_spacing = int(title_spacing / 2)
+
+    print(f"title: {title_spacing}")
+    print(f"haalf: {half_spacing}")
+
+
+    print("\n")
+    print("*" * half_spacing + f" Recipe {choice} " + "*" * half_spacing)
 
 def view_recipes():
     print("\n")
@@ -68,7 +82,21 @@ def view_recipes():
         print(f"{count}: {recipe.get_name()}")
         
     print("\n")
-    choice = input("Enter which Recipe to view: ")
+
+    try:
+        choice = int(input("Enter which Recipe to view: "))
+
+        # Check user input is within list range
+        if choice == 0 or choice > len(all_recipes):
+            print(f"Recipe {choice} doesn't exist.")
+
+        else:
+            display_recipe(choice)
+
+    except ValueError:
+        print("Error - Please enter a number.")
+            
+     
 
 # App starts here
 print_inital_welcome()
@@ -110,4 +138,4 @@ while choice != "x":
             break
 
         case _:
-            print("Error - invalid selection!")
+            print("Error - Invalid selection!")

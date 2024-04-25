@@ -70,7 +70,7 @@ def read_from_csv(ingredients_set, file_name):
                 ingredients_set.add(Ingredients(name, amount, unit))
 
     except FileNotFoundError:
-        print(f"Error: File '{file_name}' not found.")
+        print(f"Error - File '{file_name}' not found.")
         print("Creating New File...")
     
     return ingredients_set
@@ -128,6 +128,6 @@ def store_ingredient(in_recipe, current_recipe_ingredients=""):
                 write_to_csv(ingredients_set, file_name)              
 
             case _:
-                print("Error - invalid selection!")
+                print("Error - Invalid selection!")
     
     return current_recipe_ingredients
