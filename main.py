@@ -57,29 +57,58 @@ def read_from_csv(file_name):
     
     return all_recipes
 
-def display_recipe(choice):
+def display_recipe(choice, all_recipes):
     # only used to adjust the title length
     choice_str = str(choice)
     choice_len = len(choice_str)
     title_spacing = 50 - int((choice_len + 9)) # 9 is the length of the word ' Recipe '
     half_spacing = int(title_spacing / 2)
 
-    print(f"title: {title_spacing}")
-    print(f"haalf: {half_spacing}")
-
-
+    # name, ingredients, prep_time, cook_time, serves, description
+    # layout a nice display of the recipe selected
     print("\n")
     print("*" * half_spacing + f" Recipe {choice} " + "*" * half_spacing)
+    print("\n")
+    print(f"Name")
+    print(f"{all_recipes[choice - 1].get_name()}")
+    print(f"Ingredients")
+    
+    for ingredient in all_recipes[choice - 1].get_ingredients():
+        print(f"- {ingredient}")
+
+def display_all_recipes(all_recipes):
+    print("\n")
+    print("*" * 70)
+    print(f"{'Name':<20}{'Ingredients':<20}{'Prep Time':<10}{'Cook Time':<10}{'Serving Size':<15}{'Description':<20}")
+    print("*" * 70)
+
+    for recipe in all_recipes:
+        name = recipe.get_name()
+        ingredients = ', '.join(recipe.get_ingredients()) if recipe.get_ingredients() else ""
+        prep_time = recipe.get_prepare_time()
+        cook_time = recipe.get_cook_time()
+        serves = recipe.get_serves()
+        description = recipe.get_description()
+
+        # Limit description length for formatting
+        if len(description) > 20:
+            description = description[:17] + "..."  # Truncate if too long
+
+        print(f"{name:<20}{ingredients:<20}{prep_time:<10}{cook_time:<10}{serves:<15}{description:<20}")
+
+    print("*" * 70)
 
 def view_recipes():
     print("\n")
     print("*" * 18 + " View Recipes " + "*" * 18)
     all_recipes = read_from_csv("my_recipes.csv")
+
+    display_all_recipes(all_recipes)
     
     count = 0
     for recipe in all_recipes:
         count += 1
-        print(f"{count}: {recipe.get_name()}")
+        print(f"{count}: {recipe.get_name()}:{recipe.get_ingredients()}")
         
     print("\n")
 
@@ -91,7 +120,7 @@ def view_recipes():
             print(f"Recipe {choice} doesn't exist.")
 
         else:
-            display_recipe(choice)
+            display_recipe(choice, all_recipes)
 
     except ValueError:
         print("Error - Please enter a number.")

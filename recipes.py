@@ -10,7 +10,7 @@ class Recipes():
     def __init__(self, name="", ingredients="", prepare_time="", 
                  cook_time="", serves="", description=""):
         self._name = name
-        self._ingredients = ingredients
+        self._ingredients = []
         self._methods = []
         self._prepare_time = prepare_time
         self._cook_time = cook_time
@@ -33,6 +33,8 @@ class Recipes():
         print(f"Serves: {self._serves}")
         print(f"Description: {self._description}")
 
+    
+    
     # Getter and setter for name
     def get_name(self):
         return self._name
@@ -40,12 +42,17 @@ class Recipes():
     def set_name(self, name):
         self._name = name
 
-    # Getter and setter for ingredients
+   # Getter and setter for ingredients
+    def get_ingredients_csv(self):
+        # Join all ingredients data into one string for a single CSV cell
+        return "; ".join([ing.store_csv_info() for ing in self._ingredients])
+    
     def get_ingredients(self):
-        return [ingredient._name for ingredient in self._ingredients]
+        return self._ingredients
 
     def set_ingredients(self, ingredients):
-        self._ingredients = ingredients if ingredients is not None else set()
+        if ingredients:
+            self._ingredients.extend(ingredients)
     
     # Getter and setter for method
     def get_methods(self):
@@ -54,15 +61,6 @@ class Recipes():
     def set_method(self, method):
         if method:
             self._methods.append(method)
-
-    # Gets the amount of steps to display
-    def get_step_count(self):
-        step_count = len(self._methods)
-        
-        if step_count == 1:
-            return f"{step_count} Step"
-
-        return f"{step_count} Steps"
 
     # Getter and setter for prepare time
     def get_prepare_time(self):
@@ -97,11 +95,9 @@ def recipes_sub_menu(current_recipe):
     print("*" * 19 + " New Recipe " + "*" * 19)
     print(f"A. Add Name: {current_recipe.get_name()}") # Add a name
 
-    ingredients_list = current_recipe.get_ingredients()
-    ingredients_str = ', '.join(ingredients_list)
-    print(f"B. Add Ingredients: {ingredients_str}") # Add a name // sub menu
+    print(f"B. Add Ingredients: {get_count(current_recipe.get_ingredients(), 'Ingredient')}") # Add a name // sub menu
 
-    print(f"C. Add Method: {current_recipe.get_step_count()}") # Add Methods // sub menu
+    print(f"C. Add Method: {get_count(current_recipe.get_methods(), 'Step')}") # Add Methods // sub menu
     print(f"D. Add Prep Time: {current_recipe.get_prepare_time()}") # Add a prepare time
     print(f"E. Add Cook Time: {current_recipe.get_cook_time()}") # Add a cook time
     print(f"F. Serving Size: {current_recipe.get_serves()}") # Add a serving size
@@ -138,7 +134,7 @@ def write_to_csv(current_recipe, file_name):
             # Write recipe details
             writer.writerow([
                 current_recipe.get_name(),
-                ', '.join(current_recipe.get_ingredients()),
+                current_recipe.get_ingredients_csv(),
                 current_recipe.get_prepare_time(),
                 current_recipe.get_cook_time(),
                 current_recipe.get_serves(),
@@ -147,6 +143,15 @@ def write_to_csv(current_recipe, file_name):
 
     except IOError:
         print(f"Error writing to '{file_name}'")
+
+# Gets the count to display
+def get_count(list, count_type):
+    count = len(list)
+    
+    if count == 1:
+        return f"{count} {count_type}"
+
+    return f"{count} {count_type}s"
 
 # Wraps the method into 50 chartacters when saved
 def wrap_input(prompt, width=50):
