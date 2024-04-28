@@ -4,10 +4,10 @@ import csv
 import os
 
 # Local modules
-from ingredients import store_ingredient
+from ingredients import store_ingredient, Ingredients
 
 class Recipes():
-    def __init__(self, name="", ingredients="", prepare_time="", 
+    def __init__(self, name="", prepare_time="", 
                  cook_time="", serves="", description=""):
         self._name = name
         self._ingredients = []
@@ -16,24 +16,24 @@ class Recipes():
         self._cook_time = cook_time
         self._serves = serves
         self._description = description
-    
+
     # To print recipe
     def display_recipe(self):
         print("Recipe Details:")
         print(f"Name: {self._name}")
+
         print("Ingredients:")
-
-        # TODO - Not happy with this, need to fix
         for ingredient in self._ingredients:
-            print(f"- {ingredient._name}")
+            print(f"- {ingredient.get_name()}")  
 
-        print(f"Method: {self._methods}")
+        print("Methods:")
+        for method in self._methods:
+            print(method)
+
         print(f"Preparation Time: {self._prepare_time}")
         print(f"Cooking Time: {self._cook_time}")
         print(f"Serves: {self._serves}")
         print(f"Description: {self._description}")
-
-    
     
     # Getter and setter for name
     def get_name(self):
@@ -46,14 +46,20 @@ class Recipes():
     def get_ingredients_csv(self):
         # Join all ingredients data into one string for a single CSV cell
         return "; ".join([ing.store_csv_info() for ing in self._ingredients])
-    
+
     def get_ingredients(self):
         return self._ingredients
 
-    def set_ingredients(self, ingredients):
+    def add_ingredients(self, ingredients):
         if ingredients:
             self._ingredients.extend(ingredients)
     
+    # Initialise ingredients from csv
+    def set_ingredients(self, ingredients):
+        for ingredient in ingredients:
+            ing_name, ing_quantity, ing_unit = ingredient.split(',')
+            self._ingredients.append(Ingredients(ing_name, ing_quantity, ing_unit))
+
     # Getter and setter for method
     def get_methods(self):
         return self._methods
@@ -62,6 +68,11 @@ class Recipes():
         if method:
             self._methods.append(method)
 
+    def display_methods(self, methods):
+        for i, step in enumerate(methods, start = 1):
+            print(f"Step {i}:")
+            print(step)
+    
     # Getter and setter for prepare time
     def get_prepare_time(self):
         return self._prepare_time
@@ -94,9 +105,7 @@ def recipes_sub_menu(current_recipe):
     print("\n")
     print("*" * 19 + " New Recipe " + "*" * 19)
     print(f"A. Add Name: {current_recipe.get_name()}") # Add a name
-
     print(f"B. Add Ingredients: {get_count(current_recipe.get_ingredients(), 'Ingredient')}") # Add a name // sub menu
-
     print(f"C. Add Method: {get_count(current_recipe.get_methods(), 'Step')}") # Add Methods // sub menu
     print(f"D. Add Prep Time: {current_recipe.get_prepare_time()}") # Add a prepare time
     print(f"E. Add Cook Time: {current_recipe.get_cook_time()}") # Add a cook time
@@ -129,20 +138,25 @@ def write_to_csv(current_recipe, file_name):
             if not file_exists:
                 # Write header
                 writer.writerow(["Name", "Ingredients", "Prep Time", 
-                                    "Cook Time", "Serving Size", "Description"])
+                                    "Cook Time", "Serving Size", "Methods", "Description"])
 
-            # Write recipe details
+            # Join methods with a delimiter
+            methods_str = "; ".join(current_recipe.get_methods())
+
+            # Write recipe details including methods
             writer.writerow([
                 current_recipe.get_name(),
                 current_recipe.get_ingredients_csv(),
                 current_recipe.get_prepare_time(),
                 current_recipe.get_cook_time(),
                 current_recipe.get_serves(),
+                methods_str,
                 current_recipe.get_description()
             ])
 
     except IOError:
         print(f"Error writing to '{file_name}'")
+
 
 # Gets the count to display
 def get_count(list, count_type):
@@ -154,31 +168,34 @@ def get_count(list, count_type):
     return f"{count} {count_type}s"
 
 # Wraps the method into 50 chartacters when saved
-def wrap_input(prompt, width=50):
-    # Display the prompt and get user input
-    user_input = input(prompt)
+def word_wrap(text, width=50):
+    wrapped_text = textwrap.fill(text, width=width)
 
-    # Wrap the input text horizontally to the specified width
-    wrapped_lines = [user_input[i:i+width] for i in range(0, len(user_input), width)]
-    wrapped_input = "\n".join(wrapped_lines)
-
-    return wrapped_input
+    return wrapped_text
 
 # Add a new step to the method
 def add_step(steps_count, current_recipe):
     next_step = f"Step {steps_count}:"
     print(f"\n{next_step}")
 
-    method_step = wrap_input("Enter Step: ")
-    current_recipe.set_method(f"{next_step}\n{method_step}")
+    method_step = word_wrap(input("Enter Step: "))
+    current_recipe.set_method(f"{method_step}")
 
 # Allow user to edit method
 def edit_step(current_recipe):
     methods = current_recipe.get_methods()
 
-    for method in current_recipe.get_methods():
-        print("\n")
-        print(textwrap.fill(method, width=50))
+    # Counts which step to edit
+    count = 0
+    for method in methods:
+        # print("\n")
+
+        # Edit the selected step
+        count += 1
+        edit_step = f"Step {count}:"
+        print(f"\n{edit_step}")
+
+        print(word_wrap(method))
 
     # Find the item index of the method
     while True:
@@ -196,32 +213,22 @@ def edit_step(current_recipe):
     if removed_step != 0:
         print("\n")
         print("*" * 22 + " Edit " + "*" * 22)
-        # Edit the selected step
-        edit_step = f"Step {removed_step}:"
-        print(f"\n{edit_step}")
 
         # Remove leading/trailing whitespace
-        current_edit = methods[removed_step - 1].split(":")[1].strip()  
+        current_edit = word_wrap(methods[removed_step - 1])
 
         # Wrap the line to fit within 50 characters
         wrapped_edit = textwrap.fill(current_edit, width=50)
-        method_step = input_with_prefill("Enter Step: \n", f"{wrapped_edit}")
+        method_step = input_with_prefill("Edit Step: \n", f"{wrapped_edit}")
 
         # Strip extra newline characters
-        methods[removed_step - 1] = f"{edit_step}\n{method_step.strip()}" 
+        methods[removed_step - 1] = f"{method_step.strip()}" 
 
 #  Prefill the input with the last text, to allow the user to edit what exists
-def input_with_prefill(prompt, text, width=50):
+def input_with_prefill(prompt, text):
     def hook():
-        # Split text into lines and strip leading/trailing whitespace
-        lines = [line.strip() for line in text.split("\n")]
-        # Wrap each line to specified width
-        wrapped_lines = [textwrap.fill(line, width=width) for line in lines]
-        # Join wrapped lines
-        wrapped_text = "\n".join(wrapped_lines)
-        readline.insert_text(wrapped_text)
+        readline.insert_text(text)
         readline.redisplay()
-    
     readline.set_pre_input_hook(hook)
     result = input(prompt)
     readline.set_pre_input_hook()
@@ -276,7 +283,7 @@ def new_recipe():
 
             # Add ingredients
             case "b":
-                current_recipe.set_ingredients(store_ingredient(True, ingredients_set))
+                current_recipe.add_ingredients(store_ingredient(True, ingredients_set))
 
             # Add method
             case "c":

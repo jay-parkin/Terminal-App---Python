@@ -7,11 +7,28 @@ class Ingredients:
         self._unit = unit
 
     def display_info(self):
-        print(f"Ingredient: {self._name}")
-        print(f"Amount: {self._amount} {self._unit}\n")
+        if self._name == "":
+            self._name = "n/a"
+
+        if self._amount == "":
+            self._amount = "n/a"
+
+        if self._unit == "":
+            self._unit = "n/a"
+
+        return f"Name: {self._name}\n\tAmount: {self._amount}\n\tUnit: {self._unit}\n"
     
     def store_csv_info(self):
         return f"{self._name},{self._amount},{self._unit}"
+    
+    def get_name(self):
+        return self._name
+    
+    def get_amount(self):
+        return self._amount
+    
+    def get_unit(self):
+        return self._unit
 
 def ingredients_sub_menu():
     print("\n")
@@ -112,12 +129,12 @@ def store_ingredient(in_recipe, current_recipe_ingredients=""):
                 # If true, print current recipe ingredient, else print stored
                 if in_recipe:
                     for ingredient in current_recipe_ingredients:
-                        view_ingredients(ingredient)
+                        print(view_ingredients(ingredient))
                     
                     print(f"Total: {current_ingredient_count}")
                 else:
                     for ingredient in ingredients_set:
-                        view_ingredients(ingredient)
+                        print(view_ingredients(ingredient))
                     
                     print(f"Total: {stored_ingredient_count}")
                 
