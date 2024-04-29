@@ -3,15 +3,14 @@ import textwrap
 
 # Local modules
 from ingredients import store_ingredient, Ingredients
+from helper_functions import word_wrap
 
 class Recipes():
-    def __init__(self, name="", prepare_time="", 
-                 cook_time="", serves="", description=""):
+    def __init__(self, name="", ready_in_minutes="", serves="", description=""):
         self._name = name
         self._ingredients = []
         self._methods = []
-        self._prepare_time = prepare_time
-        self._cook_time = cook_time
+        self._ready_in_minutes = ready_in_minutes
         self._serves = serves
         self._description = description
         self._status = "active"
@@ -29,8 +28,7 @@ class Recipes():
         for method in self._methods:
             print(method)
 
-        print(f"Preparation Time: {self._prepare_time}")
-        print(f"Cooking Time: {self._cook_time}")
+        print(f"Ready In Minutes: {self._ready_in_minutes}")
         print(f"Serves: {self._serves}")
         print(f"Description: {self._description}")
     
@@ -79,19 +77,12 @@ class Recipes():
             print(f"Step {i}:")
             print(f"{step[0]}")
     
-    # Getter and setter for prepare time
-    def get_prepare_time(self):
-        return self._prepare_time
+    # Getter and setter for ready_in_minutes
+    def get_ready_in_minutes(self):
+        return self._ready_in_minutes
 
-    def set_prepare_time(self, prepare_time):
-        self._prepare_time = prepare_time
-
-    # Getter and setter for cook time
-    def get_cook_time(self):
-        return self._cook_time
-
-    def set_cook_time(self, cook_time):
-        self._cook_time = cook_time
+    def set_ready_in_minutes(self, ready_in_minutes):
+        self._ready_in_minutes = ready_in_minutes
 
     # Getter and setter for serves
     def get_serves(self):
@@ -123,8 +114,7 @@ def recipes_sub_menu(current_recipe):
     print(f"A. Add Name: {current_recipe.get_name()}") # Add a name
     print(f"B. Add Ingredients: {get_count(current_recipe.get_ingredients(), 'Ingredient')}") # Add a name // sub menu
     print(f"C. Add Method: {get_count(current_recipe.get_methods(), 'Step')}") # Add Methods // sub menu
-    print(f"D. Add Prep Time: {current_recipe.get_prepare_time()}") # Add a prepare time
-    print(f"E. Add Cook Time: {current_recipe.get_cook_time()}") # Add a cook time
+    print(f"D. Add Ready In Minutes: {current_recipe.get_ready_in_minutes()}") # Add a prepare time
     print(f"F. Serving Size: {current_recipe.get_serves()}") # Add a serving size
     print(f"G. Add Description: {current_recipe.get_description()}") # Add a description
     print("S. Submit & Save") # Submits recipe
@@ -149,12 +139,6 @@ def get_count(list, count_type):
         return f"{count} {count_type}"
 
     return f"{count} {count_type}s"
-
-# Wraps the method into 50 chartacters when saved
-def word_wrap(text, width=50):
-    wrapped_text = textwrap.fill(text, width=width)
-
-    return wrapped_text
 
 # Add a new step to the method
 def add_step(steps_count, current_recipe):
@@ -272,13 +256,9 @@ def new_recipe():
             case "c":
                 new_method(current_recipe)  
 
-            # Add prep time
+            # Add ready_in_minutes
             case "d":
-                current_recipe.set_prepare_time(input("Prep time: "))
-
-            # Add cook time
-            case "e":
-                current_recipe.set_cook_time(input("Cook Time: "))
+                current_recipe.set_ready_in_minutes(input("Ready In Minutes: "))
 
             # Add serving size
             case "f":

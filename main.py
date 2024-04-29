@@ -1,6 +1,11 @@
+import json
+
+# Local modules
 from ingredients import store_ingredient, Ingredients
-from recipes import new_recipe
+from recipes import new_recipe, Recipes
 from csv_functions import read_recipes_from_csv, write_recipes_to_csv
+from recipe_api_request import random_recipe_request
+from helper_functions import word_wrap, remove_html_tags
 
 # Print measurements to help with aligning
 print_width = 50
@@ -58,11 +63,8 @@ def display_recipe(choice, all_recipes):
     for ingredient in all_recipes[choice - 1].get_ingredients():
         print(f"{ingredient.display_info()}")
     
-    print(f"Prep Time")
-    print(f"\t{all_recipes[choice - 1].get_prepare_time()}")
-
-    print(f"\nCook Time")
-    print(f"\t{all_recipes[choice - 1].get_cook_time()}")
+    print(f"Ready In Minutes")
+    print(f"\t{all_recipes[choice - 1].get_ready_in_minutes()}")
 
     print(f"\nServing Size")
     print(f"\t{all_recipes[choice - 1].get_serves()}")
@@ -73,7 +75,6 @@ def display_recipe(choice, all_recipes):
 
     print(f"\nDescription")
     print(f"{all_recipes[choice - 1].get_description()}")
-
 
 # Allow the user to view all recipes on the console
 def display_all_recipes(all_recipes):
@@ -103,7 +104,7 @@ def display_all_recipes(all_recipes):
 
 # Remove a recipe from the list
 def delete_recipe(choice, all_recipes):
-    print(f"\nDeleting Recipe: {choice}")
+    print(f"\nDeleting Recipe: {all_recipes[choice - 1].get_name()}")
 
     print("1: Yes")
     print("2: No")
@@ -113,14 +114,12 @@ def delete_recipe(choice, all_recipes):
 
     if choice_yes == "1":
         # Confirmed to delete
-        print(f"Deleting {all_recipes[choice - 1].get_name()}...")
+        print(f"Deleting...")
         # Set recipe inactive
         all_recipes[choice - 1].set_status_inactive()
-        print(f"{all_recipes[choice - 1].get_name()} is now: {all_recipes[choice - 1].get_status()}")
 
         # Write list of recipes without the inacive recipe selected
         write_recipes_to_csv(all_recipes, "my_recipes.csv", "w")
-
 
 def view_recipes(action):
     print("\n")
@@ -153,6 +152,82 @@ def view_recipes(action):
     except ValueError:
         print("Error - Please enter a number.")
  
+def load_recipe_data(filename):
+    with open(filename, "r") as file:
+        recipe_data = json.load(file)
+    return recipe_data
+
+# Create a random recipes > pull https://rapidapi.com/spoonacular/api/recipe-food-nutrition
+def random_recipe():
+    # Load recipe data from the JSON file
+    filename = "recipe_data1.json"
+    loaded_data = load_recipe_data(filename)
+
+    response_data = loaded_data
+    # Extract title from the first recipe in the response
+    if "recipes" in response_data and len(response_data["recipes"]) > 0:
+        random_recipe = []
+
+        for recipe_data in response_data["recipes"]:
+
+            # recipe name
+            title = recipe_data.get("title", "n/a")
+
+            # add ingredients
+            ingredients = []
+            name = ""
+            amount = ""
+            unit = ""
+            extendedIngredients = recipe_data.get("extendedIngredients", [])
+            
+            for ingredient in extendedIngredients:
+                name = ingredient.get("nameClean")
+                amount = ingredient.get("amount")
+                unit = ingredient.get("unit")
+
+                ingredients.append(Ingredients(name, amount, unit))
+
+            # method > steps
+            methods = []
+            length = 0 # Length of each step
+            ready_in_minutes = 0
+            analyzed_instructions = recipe_data.get("analyzedInstructions", [])
+
+            # move through get instuction and add to step
+            for instruction in analyzed_instructions:
+                steps = instruction.get("steps", [])
+                for step in steps:
+                    methods.append(step["step"])
+                    # collect length as well
+                    # get ready time from the length of each step
+                    # ready_time = recipe_data.get("readyInMinutes", "n/a")
+                    length = step["length"]["number"] if "length" in step else 0
+                    ready_in_minutes += length
+
+            serves = recipe_data.get("servings", "n/a")
+            
+            description = remove_html_tags(recipe_data.get("summary", title))
+
+            # #  Create a Recipes object
+            random_recipe = Recipes(title, ready_in_minutes, serves, description)
+            random_recipe.add_ingredients(ingredients)
+            random_recipe.read_csv_method(methods)
+    
+            return random_recipe
+    else:
+        print("No recipes found in the response")
+
+    # # Example usage
+    # tags = "brisket"
+    # amount = 1  # Changed to fetch one recipe
+    # response_data = random_recipe_request(tags, amount)
+
+    # # Save the recipe data to a JSON file
+    # filename = "recipe_data1.json"
+    # with open(filename, 'w') as file:
+    #     json.dump(response_data, file)
+
+    # print(f"Recipe data saved to '{filename}'")
 
 # App starts here
 print_inital_welcome()
@@ -170,7 +245,10 @@ while choice != "x":
 
         # Add random recipe
         case "b":
-            print("")
+             recipe = Recipes()
+             recipe = random_recipe()
+
+             write_recipes_to_csv([recipe], "my_recipes.csv", "a")
 
         # Generate recipe using my ingredients
         case "c":

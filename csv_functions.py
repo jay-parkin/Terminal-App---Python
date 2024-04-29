@@ -5,39 +5,6 @@ from recipes import Recipes
 from ingredients import Ingredients
 
 # Store recipe into a csv with headers
-# def write_recipes_to_csv(current_recipe, file_name, mode):
-#     try:
-#         if current_recipe.get_status() == "active":
-#             print("Writing to csv...")
-#             file_exists = os.path.isfile(file_name)
-
-#             with open(file_name, mode, newline="") as file:
-#                 writer = csv.writer(file)
-
-#                 # Write header only if the file doesn't exist
-#                 if not file_exists:
-#                     # Write header
-#                     writer.writerow(["Name", "Ingredients", "Prep Time", 
-#                                         "Cook Time", "Serving Size", "Methods", "Description", "Status"])
-
-#                 # Join methods with a delimiter
-#                 methods_str = "; ".join(current_recipe.get_methods())
-
-#                 # Write recipe details including methods
-#                 writer.writerow([
-#                     current_recipe.get_name(),
-#                     current_recipe.get_ingredients_csv(),
-#                     current_recipe.get_prepare_time(),
-#                     current_recipe.get_cook_time(),
-#                     current_recipe.get_serves(),
-#                     methods_str,
-#                     current_recipe.get_description(),
-#                     current_recipe.get_status()
-#                 ])
-
-#     except IOError:
-#         print(f"Error writing to '{file_name}'")
-
 def write_recipes_to_csv(recipes, file_name, mode):
     try:
         print("Writing to csv...")
@@ -48,22 +15,22 @@ def write_recipes_to_csv(recipes, file_name, mode):
 
             # Write header only if the file doesn't exist
             if not file_exists or mode == "w":
-                writer.writerow(["Name", "Ingredients", "Prep Time", 
-                                 "Cook Time", "Serving Size", "Steps", "Description", "Status"])
-
-
+                writer.writerow(["Name", "Ingredients", "Ready In Minutes", 
+                                 "Serving Size", "Steps", "Description", "Status"])
 
             for current_recipe in recipes:
                 if current_recipe.get_status() == "active":
                     # Join methods with a delimiter
-                    methods_str = "; ".join(current_recipe.get_methods())
+                    # methods_str = "; ".join(current_recipe.get_methods())
+                    methods_str = "; ".join([", ".join(method) 
+                                             if isinstance(method, list) 
+                                             else method for method in current_recipe.get_methods()])
 
                     # Write recipe details including methods
                     writer.writerow([
                         current_recipe.get_name(),
                         current_recipe.get_ingredients_csv(),
-                        current_recipe.get_prepare_time(),
-                        current_recipe.get_cook_time(),
+                        current_recipe.get_ready_in_minutes(),
                         current_recipe.get_serves(),
                         methods_str,
                         current_recipe.get_description(),
@@ -85,18 +52,18 @@ def read_recipes_from_csv(file_name):
                 name = row['Name']
                 ingredients_data = row['Ingredients']
                 ingredients = ingredients_data.split('; ') if ingredients_data else []
-                prepare_time = row['Prep Time']
-                cook_time = row['Cook Time']
+                ready_in_minutes = row['Ready In Minutes']
                 serves = row['Serving Size']
                 methods_data = row['Steps']
                 methods = methods_data.split('; ') if methods_data else []
                 description = row['Description']
                 status = row['Status']
 
-                recipe = Recipes(name, prepare_time, cook_time, serves, description)
+                recipe = Recipes(name, ready_in_minutes, serves, description)
                 recipe.set_status(status)
                 recipe.set_ingredients(ingredients)
                 recipe.read_csv_method(methods)
+                
                 all_recipes.append(recipe)
 
     except FileNotFoundError:
