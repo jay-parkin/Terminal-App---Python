@@ -1,6 +1,6 @@
-import csv
 from ingredients import store_ingredient, Ingredients
-from recipes import new_recipe, Recipes
+from recipes import new_recipe
+from csv_functions import read_recipes_from_csv, write_recipes_to_csv
 
 # Print measurements to help with aligning
 print_width = 50
@@ -36,36 +36,6 @@ def create_menu():
     print("X. Exit") # Exits app
 
     return input("Enter Selection: ").lower()
-
-# Read from csv at the start
-def read_from_csv(file_name):
-    all_recipes = []
-
-    try:
-        with open(file_name, mode="r", newline="") as file:
-            reader = csv.DictReader(file)
-
-            for row in reader:
-                name = row['Name']
-                ingredients_data = row['Ingredients']
-                ingredients = ingredients_data.split('; ') if ingredients_data else []
-                prepare_time = row['Prep Time']
-                cook_time = row['Cook Time']
-                serves = row['Serving Size']
-                methods_data = row['Steps']
-                methods = methods_data.split('; ') if methods_data else []
-                description = row['Description']
-
-                recipe = Recipes(name, prepare_time, cook_time, serves, description)
-                recipe.set_ingredients(ingredients)
-                recipe.set_method(methods)
-                all_recipes.append(recipe)
-
-    except FileNotFoundError:
-        print(f"Error - File '{file_name}' not found.")
-        print("Creating New File...")
-
-    return all_recipes
     
 # Display a single recipe after being selcted
 def display_recipe(choice, all_recipes):
@@ -86,9 +56,9 @@ def display_recipe(choice, all_recipes):
 
     print(f"\nIngredients")
     for ingredient in all_recipes[choice - 1].get_ingredients():
-        print(f"\t{ingredient.display_info()}")
+        print(f"{ingredient.display_info()}")
     
-    print(f"\nPrep Time")
+    print(f"Prep Time")
     print(f"\t{all_recipes[choice - 1].get_prepare_time()}")
 
     print(f"\nCook Time")
@@ -98,11 +68,11 @@ def display_recipe(choice, all_recipes):
     print(f"\t{all_recipes[choice - 1].get_serves()}")
 
     print(f"\nMethod")
+    # Pass itselfs through a display method
     all_recipes[choice - 1].display_methods(all_recipes[choice - 1].get_methods())
 
     print(f"\nDescription")
-    print(f"\t{all_recipes[choice - 1].get_description()}")
-
+    print(f"{all_recipes[choice - 1].get_description()}")
 
 
 # Allow the user to view all recipes on the console
@@ -131,38 +101,58 @@ def display_all_recipes(all_recipes):
     print("*" * 50)
     print("\n")
 
-def view_recipes():
-    print("\n")
-    print("*" * 18 + " View Recipes " + "*" * 18)
-    all_recipes = read_from_csv("my_recipes.csv")
+# Remove a recipe from the list
+def delete_recipe(choice, all_recipes):
+    print(f"\nDeleting Recipe: {choice}")
 
-    # Printing recipe details for testing
-    # for recipe in all_recipes:
-    #     print(f"Name: {recipe._name}")
-    #     print(f"Ingredients: {recipe._ingredients}")
-    #     print(f"Prepare Time: {recipe._prepare_time}")
-    #     print(f"Cook Time: {recipe._cook_time}")
-    #     print(f"Serves: {recipe._serves}")
-    #     print(f"Methods: {recipe._methods}")
-    #     print(f"Description: {recipe._description}")
-    #     print("*" * 50)
+    print("1: Yes")
+    print("2: No")
+
+    # Confirm the choice to delete
+    choice_yes = input("Are you sure? ") 
+
+    if choice_yes == "1":
+        # Confirmed to delete
+        print(f"Deleting {all_recipes[choice - 1].get_name()}...")
+        # Set recipe inactive
+        all_recipes[choice - 1].set_status_inactive()
+        print(f"{all_recipes[choice - 1].get_name()} is now: {all_recipes[choice - 1].get_status()}")
+
+        # Write list of recipes without the inacive recipe selected
+        write_recipes_to_csv(all_recipes, "my_recipes.csv", "w")
+
+
+def view_recipes(action):
+    print("\n")
+
+    # Change the padding size depending on the type of view
+    padding = 18
+    if action == "Delete":
+        padding = 17
+
+    print("*" * padding + f" {action} Recipes " + "*" * padding)
+    all_recipes = read_recipes_from_csv("my_recipes.csv")
 
     display_all_recipes(all_recipes)
             
     try:
-        choice = int(input("Enter which Recipe to view: "))
+        choice = int(input(f"Enter which Recipe to {action}: "))
 
         # Check user input is within list range
         if choice == 0 or choice > len(all_recipes):
             print(f"Recipe {choice} doesn't exist.")
 
-        else:
+        # View recipe
+        elif action == "View":
             display_recipe(choice, all_recipes)
+
+        # Delete recipe
+        elif action == "Delete":
+            delete_recipe(choice, all_recipes)
 
     except ValueError:
         print("Error - Please enter a number.")
-            
-     
+ 
 
 # App starts here
 print_inital_welcome()
@@ -192,11 +182,11 @@ while choice != "x":
 
         # Delete recipe
         case "e":
-            print("")
+            view_recipes("Delete")
 
         # View recipes // read csv
         case "f":
-            view_recipes()
+            view_recipes("View")
 
         # Exit app
         case "x":

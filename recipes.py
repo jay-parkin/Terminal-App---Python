@@ -1,7 +1,5 @@
 import readline
 import textwrap
-import csv
-import os
 
 # Local modules
 from ingredients import store_ingredient, Ingredients
@@ -16,6 +14,7 @@ class Recipes():
         self._cook_time = cook_time
         self._serves = serves
         self._description = description
+        self._status = "active"
 
     # To print recipe
     def display_recipe(self):
@@ -63,15 +62,22 @@ class Recipes():
     # Getter and setter for method
     def get_methods(self):
         return self._methods
+    
+    # Initialise methods from csv
+    def read_csv_method(self, methods):
+        for step in methods:
+            step = step.split(',')
+            self._methods.append(step)
 
     def set_method(self, method):
         if method:
             self._methods.append(method)
 
+    # Displaying the selected method from the main class
     def display_methods(self, methods):
         for i, step in enumerate(methods, start = 1):
             print(f"Step {i}:")
-            print(step)
+            print(f"{step[0]}")
     
     # Getter and setter for prepare time
     def get_prepare_time(self):
@@ -96,10 +102,20 @@ class Recipes():
 
     # Getter and setter for description
     def get_description(self):
-        return self._description
+        return word_wrap(self._description)
 
     def set_description(self, description):
         self._description = description
+
+    # Getter and setter for status
+    def get_status(self):
+        return self._status
+    
+    def set_status(self, status):
+        self._status = status
+    
+    def set_status_inactive(self):
+        self._status = "inactive"
 
 def recipes_sub_menu(current_recipe):
     print("\n")
@@ -124,39 +140,6 @@ def method_sub_menu():
     print("S. Submit") # Submit method
 
     return input("Enter Selection: ").lower()
-
-# Store recipe into a csv with headers
-def write_to_csv(current_recipe, file_name):
-    try:
-        print("Writing to csv...")
-        file_exists = os.path.isfile(file_name)
-
-        with open(file_name, mode="a", newline="") as file:
-            writer = csv.writer(file)
-
-            # Write header only if the file doesn't exist
-            if not file_exists:
-                # Write header
-                writer.writerow(["Name", "Ingredients", "Prep Time", 
-                                    "Cook Time", "Serving Size", "Methods", "Description"])
-
-            # Join methods with a delimiter
-            methods_str = "; ".join(current_recipe.get_methods())
-
-            # Write recipe details including methods
-            writer.writerow([
-                current_recipe.get_name(),
-                current_recipe.get_ingredients_csv(),
-                current_recipe.get_prepare_time(),
-                current_recipe.get_cook_time(),
-                current_recipe.get_serves(),
-                methods_str,
-                current_recipe.get_description()
-            ])
-
-    except IOError:
-        print(f"Error writing to '{file_name}'")
-
 
 # Gets the count to display
 def get_count(list, count_type):
@@ -309,7 +292,9 @@ def new_recipe():
             case "s":
                 # If a name exist than the recipe exist
                 if current_recipe.get_name():
-                    write_to_csv(current_recipe, file_name) 
+                    from csv_functions import write_recipes_to_csv
+
+                    write_recipes_to_csv([current_recipe], file_name, "a") 
                 else:
                     # Don't exit this menu is it is unable to save
                     choice = -1

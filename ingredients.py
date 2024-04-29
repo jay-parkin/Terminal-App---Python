@@ -1,5 +1,3 @@
-import csv
-
 class Ingredients:
     def __init__(self, name, amount, unit):
         self._name = name
@@ -16,7 +14,7 @@ class Ingredients:
         if self._unit == "":
             self._unit = "n/a"
 
-        return f"Name: {self._name}\n\tAmount: {self._amount}\n\tUnit: {self._unit}\n"
+        return f"Name:\t{self._name}\nAmount:\t{self._amount}\nUnit:\t{self._unit}\n"
     
     def store_csv_info(self):
         return f"{self._name},{self._amount},{self._unit}"
@@ -52,53 +50,16 @@ def add_ingredient(count):
 def view_ingredients(ingredient):
     return ingredient.display_info()
 
-# Store ingredients into a csv with headers
-def write_to_csv(ingredients_set, file_name):
-    try:
-        if len(ingredients_set) > 0:
-            print("Writing to csv...")
-
-            with open(file_name, mode="w", newline="") as file:
-                writer = csv.writer(file)
-
-                # Write header
-                writer.writerow(["Name", "Amount", "Unit"])
-
-                # Write ingredients
-                for ingredient in ingredients_set:
-                    writer.writerow(ingredient.store_csv_info().split(','))
-        else:
-            print("Nothing to submit.")
-
-    except IOError:
-        print(f"Error writing to '{file_name}'")
-
-# Read from csv at the start
-def read_from_csv(ingredients_set, file_name):
-    ingredients_set = set()  # Set of ingredients
-
-    try:
-        with open(file_name, mode="r") as file:
-            reader = csv.reader(file)
-            next(reader)  # Skip header row
-
-            for row in reader:
-                name, amount, unit = row
-                ingredients_set.add(Ingredients(name, amount, unit))
-
-    except FileNotFoundError:
-        print(f"Error - File '{file_name}' not found.")
-        print("Creating New File...")
-    
-    return ingredients_set
-
 def store_ingredient(in_recipe, current_recipe_ingredients=""):
     # Stored locally
     file_name = "my_ingredients.csv"
     
     # Load ingredients
     ingredients_set = set() # Set of ingredients
-    ingredients_set = read_from_csv(ingredients_set, file_name)
+
+    # Load local import
+    from csv_functions import read_ingredients_from_csv
+    ingredients_set = read_ingredients_from_csv(ingredients_set, file_name)
 
     # Init count
     stored_ingredient_count = len(ingredients_set)
@@ -142,7 +103,9 @@ def store_ingredient(in_recipe, current_recipe_ingredients=""):
 
             # Submits ingredients to csv
             case "s":
-                write_to_csv(ingredients_set, file_name)              
+                # Import local module
+                from csv_functions import write_ingredients_to_csv
+                write_ingredients_to_csv(ingredients_set, file_name)              
 
             case _:
                 print("Error - Invalid selection!")
