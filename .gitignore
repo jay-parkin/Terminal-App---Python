@@ -2,3 +2,6 @@ __pycache__
 .venv
 my_recipes.csv
 my_ingredients.csv
+new.json
+recipe_data.json
+recipe.data1.json

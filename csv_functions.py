@@ -7,7 +7,7 @@ from ingredients import Ingredients
 # Store recipe into a csv with headers
 def write_recipes_to_csv(recipes, file_name, mode):
     try:
-        print("Writing to csv...")
+        print("Saving...")
         file_exists = os.path.isfile(file_name)
 
         with open(file_name, mode, newline="") as file:
