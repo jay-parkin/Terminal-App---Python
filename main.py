@@ -1,25 +1,35 @@
 import json
 
+from rich.console import Console
+from rich.table import Table
+
 # Local modules
 from ingredients import store_ingredient, Ingredients
 from recipes import new_recipe, Recipes
 from csv_functions import read_recipes_from_csv, write_recipes_to_csv, read_ingredients_from_csv
 from recipe_api_request import random_recipe_request, recipe_by_ingredient_request, get_recipe_by_id
-from helper_functions import word_wrap, remove_html_tags
+from helper_functions import word_wrap, remove_html_tags, get_first_sentence
 
-# Print measurements to help with aligning
-print_width = 50
+# Console to print the tables
+console = Console()
 
 # Introduces the app
 def print_inital_welcome():
-    print("\n**************************************************")
-    print("Culinary Companion".center(print_width))
-    print("**************************************************")
-    print("Welcome to the Digital Dish".center(print_width))
-    print("your ultimate culinary companion for exploring".center(print_width))
-    print("creating and savouring delicious dished!".center(print_width))
-    print("\n")
-    print("Let's get started...".center(print_width))
+
+    welcome_msg = """
+    Welcome to the Digital Dish!
+    your ultimate culinary companion for exploring,
+    creating and savouring delicious dishes!
+                
+    Let's get started!
+    """
+
+    table = Table()
+
+    table.add_column("Culinary Companion",justify="center", min_width=55)
+    table.add_row(welcome_msg)
+
+    console.print(table)
 
 def print_goodbye():
     print("\n")
@@ -29,77 +39,99 @@ def print_goodbye():
 
 # Load menu for user interaction
 def create_menu():
-    print("\n")
-    print("*" * 19 + " Main Menu " + "*" * 20)
-    # print("**************************************************")
-    print("A. Add New Recipe") # Add a new recipe to the list
-    print("B. Add Random Recipe") # Add a random recipe to the list
-    print("C. Generate Recipe Using My Ingredients") # Generate a recipe using ingredients from the stored ingredient list
-    print("D. My Ingredients") # Add ingredients found at home
-    print("E. Delete Recipe") # Delete a recipe from the list
-    print("F. View Recipes") # Allows the use to view and print recipe
-    print("X. Exit") # Exits app
+    print("")
+    table = Table(title="Main Menu",
+                        title_style="bold",
+                        title_justify="left")
+
+    table.add_column()
+    table.add_column("Options", justify="left", min_width=50)
+
+    table.add_row("A.", "Add New Recipe")
+    table.add_row("B.", "Add Random Recipe")
+    table.add_row("C.", "Generate Recipe Using My Ingredients")
+    table.add_row("D.", "My Ingredients")
+    table.add_row("E.", "Delete Recipe")
+    table.add_row("F.", "View Recipes")
+    table.add_row("X.", "Exit")
+
+    console.print(table)
 
     return input("Enter Selection: ").lower()
     
 # Display a single recipe after being selcted
 def display_recipe(choice, all_recipes):
-    # only used to adjust the title length
-    choice_str = str(choice)
-    choice_len = len(choice_str)
-    title_spacing = 50 - int((choice_len + 9)) # 9 is the length of the word ' Recipe '
-    half_spacing = int(title_spacing / 2)
-
+    print("")
     # name, ingredients, prep_time, cook_time, serves, steps, description
     # layout a nice display of the recipe selected
-    print("\n")
-    print("*" * half_spacing + f" Recipe {choice} " + "*" * half_spacing)
-    print("\n")
 
-    print(f"Name")
-    print(f"\t{all_recipes[choice - 1].get_name()}")
+    # Title of the entire recipe
+    table_title = Table(title=f"{all_recipes[choice - 1].get_name()}",
+                        title_style="bold",
+                        title_justify="left")
+    table_title.add_column("Ready In Minutes")
+    table_title.add_column("Servings")
+    table_title.add_row(f"{all_recipes[choice - 1].get_ready_in_minutes()}",
+                        f"{all_recipes[choice - 1].get_serves()}")
 
-    print(f"\nIngredients")
+    console.print(table_title)
+
+    # start of the ingredients table
+    print("")
+    table_ingredient = Table(title="Ingredients",
+                        title_style="bold",
+                        title_justify="left")
+    table_ingredient.add_column("Name", justify="left")
+    table_ingredient.add_column("Amount", justify="left")
+    table_ingredient.add_column("Unit / Sizing", justify="left")
+
     for ingredient in all_recipes[choice - 1].get_ingredients():
-        print(f"{ingredient.display_info()}")
+        table_ingredient.add_row(f"{ingredient.get_name()}",
+                      f"{ingredient.get_amount()}",
+                      f"{ingredient.get_unit()}")
     
-    print(f"Ready In Minutes")
-    print(f"\t{all_recipes[choice - 1].get_ready_in_minutes()}")
+    console.print(table_ingredient)
 
-    print(f"\nServing Size")
-    print(f"\t{all_recipes[choice - 1].get_serves()}")
-
-    print(f"\nMethod")
+    # Start of the method table
+    print("")
+    table_method = Table(title="Method",
+                        title_style="bold",
+                        title_justify="left")
+    
+    table_method.add_column("Steps", justify="left")
+    table_method.add_column("Description", justify="left")
     # Pass itselfs through a display method
-    all_recipes[choice - 1].display_methods(all_recipes[choice - 1].get_methods())
+    all_recipes[choice - 1].display_methods(all_recipes[choice - 1].get_methods(), table_method, console)
 
-    print(f"\nDescription")
-    print(f"{all_recipes[choice - 1].get_description()}")
+    print("")
+    table_description = Table()
+    table_description.add_column("Description",justify="left",style="bold",width=100)
+    
+    table_description.add_row(f"{all_recipes[choice - 1].get_description()}")
+    
+    console.print(table_description)
 
 # Allow the user to view all recipes on the console
-def display_all_recipes(all_recipes):
-    print("*" * 50)
-    print(f"{'No.':5}{'Name':<17}{'Description':<27}")
-    print("*" * 50)
+def display_all_recipes(all_recipes, action):
+    print("")
+    # Display recipes in a table format
+    table = Table(title=f"{action} Recipes",
+                        title_style="bold",
+                        title_justify="left")
+    table.add_column("No.", justify="left")
+    table.add_column("Name", justify="left", width=35)
+    table.add_column("Description", justify="left", width=70)
 
     count = 0
     for recipe in all_recipes:
         count += 1
 
-        name = recipe.get_name()
-        description = recipe.get_description()
+        name = get_first_sentence(recipe.get_name())
+        description = get_first_sentence(recipe.get_description())
 
-        # Limit length for formatting
-        if len(name) > 12:
-            name = name[:12] + "..."  # Truncate if too long
+        table.add_row(f"{count}", f"{name}", f"{description}")
 
-        if len(description) > 25:
-            description = description[:25] + "..."  # Truncate if too long
-
-        print(f"{count:<5}{name:<17}{description:<30}")
-
-    print("*" * 50)
-    print("\n")
+    console.print(table)
 
 # Remove a recipe from the list
 def delete_recipe(choice, all_recipes):
@@ -121,17 +153,15 @@ def delete_recipe(choice, all_recipes):
         write_recipes_to_csv(all_recipes, "my_recipes.csv", "w")
 
 def view_recipes(action):
-    print("\n")
-
     # Change the padding size depending on the type of view
     padding = 18
     if action == "Delete":
         padding = 17
 
-    print("*" * padding + f" {action} Recipes " + "*" * padding)
+    # print("*" * padding + f" {action} Recipes " + "*" * padding)
     all_recipes = read_recipes_from_csv("my_recipes.csv")
 
-    display_all_recipes(all_recipes)
+    display_all_recipes(all_recipes, action)
             
     try:
         choice = int(input(f"Enter which Recipe to {action}: "))
@@ -169,14 +199,7 @@ def get_recipe_id(data):
 
 # Create a recipes from id > pull https://rapidapi.com/spoonacular/api/recipe-food-nutrition
 def get_recipe_from_api(id):
-    # Load recipe data from the JSON file
-    # response_data = found_recipe_request()
 
-    # Loaded local data for testing
-    # filename = "recipe_data1.json"
-    # recipe_data = load_recipe_data(filename)
-
-    # 634486 - brisket
     recipe_data = get_recipe_by_id(id)
 
     found_recipe = []
@@ -234,11 +257,13 @@ def get_recipe_from_api(id):
 def recipe_by_ingredient():
     print("\n")
     print("*" * 14 + " Recipe By Ingredient " + "*" * 14)
+
     # list of 5 recipe titles. + cancel = 0
     # which recipe would you like to view?
         # get id and search in api
         # save recipe
     # remove from list of 5
+
     file_name = "my_ingredients.csv"
     
     # Load ingredients

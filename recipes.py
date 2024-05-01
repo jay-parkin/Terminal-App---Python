@@ -1,9 +1,11 @@
 import readline
 import textwrap
 
+from rich.console import Console
+from rich.table import Table
+
 # Local modules
 from ingredients import store_ingredient, Ingredients
-from helper_functions import word_wrap
 
 class Recipes():
     def __init__(self, name="", ready_in_minutes="", serves="", description=""):
@@ -72,11 +74,12 @@ class Recipes():
             self._methods.append(method)
 
     # Displaying the selected method from the main class
-    def display_methods(self, methods):
+    def display_methods(self, methods, table, console):
         for i, step in enumerate(methods, start = 1):
-            print(f"Step {i}:")
-            print(f"{step[0]}")
-    
+            table.add_row(f"Step {i}:", f"{step[0]}")
+        
+        console.print(table)
+
     # Getter and setter for ready_in_minutes
     def get_ready_in_minutes(self):
         return self._ready_in_minutes
@@ -93,7 +96,7 @@ class Recipes():
 
     # Getter and setter for description
     def get_description(self):
-        return word_wrap(self._description)
+        return self._description
 
     def set_description(self, description):
         self._description = description
@@ -110,13 +113,30 @@ class Recipes():
 
 def recipes_sub_menu(current_recipe):
     print("\n")
-    print("*" * 19 + " New Recipe " + "*" * 19)
+    table = Table(title="New Recipe",
+                  title_style="bold",
+                  title_justify="left")
+
+    table.add_column()
+    table.add_column("Options", justify="left", min_width=50)
+
+    table.add_row("A.", "Add Name")
+    table.add_row("B.", "Add Ingredients")
+    table.add_row("C.", "Add Method")
+    table.add_row("D.", "Add Ready In Minutes")
+    table.add_row("E.", "Serving Size")
+    table.add_row("F.", "Description")
+    table.add_column("S.", "Submit")
+    table.add_row("X.", "Exit")
+
+    console.print(table)
+
     print(f"A. Add Name: {current_recipe.get_name()}") # Add a name
-    print(f"B. Add Ingredients: {get_count(current_recipe.get_ingredients(), 'Ingredient')}") # Add a name // sub menu
+    print(f"B. Ingredients: {get_count(current_recipe.get_ingredients(), 'Ingredient')}") # Add a name // sub menu
     print(f"C. Add Method: {get_count(current_recipe.get_methods(), 'Step')}") # Add Methods // sub menu
     print(f"D. Add Ready In Minutes: {current_recipe.get_ready_in_minutes()}") # Add a prepare time
-    print(f"F. Serving Size: {current_recipe.get_serves()}") # Add a serving size
-    print(f"G. Add Description: {current_recipe.get_description()}") # Add a description
+    print(f"E. Serving Size: {current_recipe.get_serves()}") # Add a serving size
+    print(f"F. Add Description: {current_recipe.get_description()}") # Add a description
     print("S. Submit & Save") # Submits recipe
     print("X. Cancel") # Exit recipe menu
 
@@ -145,7 +165,7 @@ def add_step(steps_count, current_recipe):
     next_step = f"Step {steps_count}:"
     print(f"\n{next_step}")
 
-    method_step = word_wrap(input("Enter Step: "))
+    method_step = input("Enter Step: ")
     current_recipe.set_method(f"{method_step}")
 
 # Allow user to edit method
@@ -162,7 +182,7 @@ def edit_step(current_recipe):
         edit_step = f"Step {count}:"
         print(f"\n{edit_step}")
 
-        print(word_wrap(method))
+        print(method)
 
     # Find the item index of the method
     while True:
@@ -182,7 +202,7 @@ def edit_step(current_recipe):
         print("*" * 22 + " Edit " + "*" * 22)
 
         # Remove leading/trailing whitespace
-        current_edit = word_wrap(methods[removed_step - 1])
+        current_edit = methods[removed_step - 1]
 
         # Wrap the line to fit within 50 characters
         wrapped_edit = textwrap.fill(current_edit, width=50)
