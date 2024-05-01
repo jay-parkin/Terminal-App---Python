@@ -107,7 +107,7 @@ def read_ingredients_from_csv(ingredients_set, file_name):
                 ingredients_set.add(Ingredients(name, amount, unit))
 
     except FileNotFoundError:
-        print(f"Error - File '{file_name}' not found.")
+        print(f"File '{file_name}' not found.")
         print("Creating New File...")
     
     return ingredients_set

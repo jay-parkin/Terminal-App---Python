@@ -16,26 +16,20 @@ console = Console()
 # Introduces the app
 def print_inital_welcome():
 
-    welcome_msg = """
-    Welcome to the Digital Dish!
-    your ultimate culinary companion for exploring,
-    creating and savouring delicious dishes!
-                
-    Let's get started!
-    """
+    welcome_msg = "Welcome to the Digital Dish!\nyour ultimate culinary companion for exploring,\ncreating and savouring delicious dishes!\n\nLet's get started!"
 
     table = Table()
 
     table.add_column("Culinary Companion",justify="center", min_width=55)
-    table.add_row(welcome_msg)
+    table.add_row(welcome_msg,)
 
     console.print(table)
 
 def print_goodbye():
     print("\n")
-    print("Thank you!".center(print_width))
-    print("We hope you enjoyed using Digital Dish".center(print_width))
-    print("Have a great day!".center(print_width))
+    print("Thank you!".center(60))
+    print("We hope you enjoyed using Digital Dish".center(60))
+    print("Have a great day!".center(60))
 
 # Load menu for user interaction
 def create_menu():
@@ -85,12 +79,7 @@ def display_recipe(choice, all_recipes):
     table_ingredient.add_column("Amount", justify="left")
     table_ingredient.add_column("Unit / Sizing", justify="left")
 
-    for ingredient in all_recipes[choice - 1].get_ingredients():
-        table_ingredient.add_row(f"{ingredient.get_name()}",
-                      f"{ingredient.get_amount()}",
-                      f"{ingredient.get_unit()}")
-    
-    console.print(table_ingredient)
+    all_recipes[choice - 1].display_ingredient_info(table_ingredient, console)
 
     # Start of the method table
     print("")
@@ -255,9 +244,6 @@ def get_recipe_from_api(id):
 
 # Loads stored ingredients and pulls 5 random recipes from api
 def recipe_by_ingredient():
-    print("\n")
-    print("*" * 14 + " Recipe By Ingredient " + "*" * 14)
-
     # list of 5 recipe titles. + cancel = 0
     # which recipe would you like to view?
         # get id and search in api
@@ -284,7 +270,16 @@ def recipe_by_ingredient():
     count = []
     choice = ""
 
+
     while True:
+        print("")
+        table = Table(title="Recipe By Ingredients",
+                  title_justify="left",
+                  title_style="bold")
+    
+        table.add_column()
+        table.add_column("Options",justify="left",min_width=50)
+
         # Add all recipes from api to a list
         available_recipes = []
         for recipe in response_data:
@@ -295,9 +290,11 @@ def recipe_by_ingredient():
         count = list(range(1, len(available_recipes) + 1))
 
         for i, recipe in enumerate(available_recipes):
-            print(f"{count[i]}: {recipe['title']}")
+            table.add_row(f"{count[i]}.",f"{recipe['title']}")
 
-        print("0: Back")
+        table.add_row("0.","Back")
+        console.print(table)
+
         choice = input("Enter which Recipe to Add: ")
 
         if choice == "0":
@@ -321,8 +318,6 @@ def recipe_by_ingredient():
                 recipe = get_recipe_from_api(id)
 
                 write_recipes_to_csv([recipe], "my_recipes.csv", "a")
-
-                print(f"{selected_title} has been added..")
             else:
                 print("Invalid input. Please try again.")
         else:
@@ -330,8 +325,6 @@ def recipe_by_ingredient():
 
         # Clear init values
         choice = ""
-
-        print("")
 
 # App starts here
 print_inital_welcome()

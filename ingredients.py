@@ -1,20 +1,14 @@
+from rich.console import Console
+from rich.table import Table
+
+# Console to print the tables
+console = Console()
+
 class Ingredients:
     def __init__(self, name, amount, unit):
         self._name = name
         self._amount = amount
         self._unit = unit
-
-    def display_info(self):
-        if self._name == "":
-            self._name = "n/a"
-
-        if self._amount == "":
-            self._amount = "n/a"
-
-        if self._unit == "":
-            self._unit = "n/a"
-
-        return f"Name:\t{self._name}\nAmount:\t{self._amount}\nUnit:\t{self._unit}\n"
     
     def store_csv_info(self):
         return f"{self._name},{self._amount},{self._unit}"
@@ -29,11 +23,20 @@ class Ingredients:
         return self._unit
 
 def ingredients_sub_menu():
-    print("\n")
-    print("*" * 17 + " My Ingredients " + "*" * 17)
-    print("A. Add New Ingredient") # Add a new ingredient to the list
-    print("B. View Ingredients") # View ingredients
-    print("S. Submit & Save") # Submits ingredients
+    print("")
+
+    table = Table(title="My Ingredients",
+                        title_style="bold",
+                        title_justify="left")
+
+    table.add_column()
+    table.add_column("Options",justify="left")
+
+    table.add_row("A.", "Add New Ingredient") # Add a new ingredient to the list
+    table.add_row("B.", "View Ingredients") # View ingredients
+    table.add_row("S.", "Submit & Save") # Submits ingredients
+
+    console.print(table)
 
     return input("Enter Selection: ").lower()
 
@@ -44,11 +47,35 @@ def add_ingredient(count):
     amount = input("Enter Amount: ") # Quantity
     unit = input("Enter Unit: ") # Unit Size g, kg, ml, l
 
+    if name == "":
+        name = "n/a"
+
+    if amount == "":
+        amount = "n/a"
+
+    if unit == "":
+        unit = "n/a"
+
     # Return ingredients class
     return Ingredients(name, amount, unit)
 
-def view_ingredients(ingredient):
-    return ingredient.display_info()
+def view_ingredients(current_recipe_ingredients):
+    print("")
+
+    table = Table(title="View Ingredients",
+                  title_style="bold",
+                  title_justify="left")
+    
+    table.add_column("Name", justify="left")
+    table.add_column("Amount", justify="left")
+    table.add_column("Unit / Sizing", justify="left")
+
+    for ingredient in current_recipe_ingredients:
+            table.add_row(f"{ingredient.get_name()}",
+                      f"{ingredient.get_amount()}",
+                      f"{ingredient.get_unit()}")
+        
+    console.print(table)
 
 def store_ingredient(in_recipe, current_recipe_ingredients=""):
     # Stored locally
@@ -56,7 +83,7 @@ def store_ingredient(in_recipe, current_recipe_ingredients=""):
     
     # Load ingredients
     ingredients_set = set() # Set of ingredients
-
+    
     # Load local import
     from csv_functions import read_ingredients_from_csv
     ingredients_set = read_ingredients_from_csv(ingredients_set, file_name)
@@ -85,22 +112,16 @@ def store_ingredient(in_recipe, current_recipe_ingredients=""):
  
             # View Ingredients
             case "b":
-                print("\n")
-                print("*" * 21 + " Stored " + "*" * 21)
                 # If true, print current recipe ingredient, else print stored
                 if in_recipe:
-                    for ingredient in current_recipe_ingredients:
-                        print(view_ingredients(ingredient))
-                    
+                    view_ingredients(current_recipe_ingredients)
+
                     print(f"Total: {current_ingredient_count}")
                 else:
-                    for ingredient in ingredients_set:
-                        print(view_ingredients(ingredient))
+                    view_ingredients(ingredients_set)
                     
                     print(f"Total: {stored_ingredient_count}")
                 
-                
-
             # Submits ingredients to csv
             case "s":
                 # Import local module

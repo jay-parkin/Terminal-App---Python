@@ -7,6 +7,9 @@ from rich.table import Table
 # Local modules
 from ingredients import store_ingredient, Ingredients
 
+# Console to print the tables
+console = Console()
+
 class Recipes():
     def __init__(self, name="", ready_in_minutes="", serves="", description=""):
         self._name = name
@@ -42,6 +45,14 @@ class Recipes():
         self._name = name
 
    # Getter and setter for ingredients
+    def display_ingredient_info(self, table, console):
+        for ingredient in self._ingredients:
+            table.add_row(f"{ingredient.get_name()}",
+                      f"{ingredient.get_amount()}",
+                      f"{ingredient.get_unit()}")
+        
+        console.print(table)
+    
     def get_ingredients_csv(self):
         # Join all ingredients data into one string for a single CSV cell
         return "; ".join([ing.store_csv_info() for ing in self._ingredients])
@@ -52,7 +63,10 @@ class Recipes():
     def add_ingredients(self, ingredients):
         if ingredients:
             self._ingredients.extend(ingredients)
-    
+
+    def clear_ingredients(self):
+        self._ingredients = []
+
     # Initialise ingredients from csv
     def set_ingredients(self, ingredients):
         for ingredient in ingredients:
@@ -118,36 +132,37 @@ def recipes_sub_menu(current_recipe):
                   title_justify="left")
 
     table.add_column()
-    table.add_column("Options", justify="left", min_width=50)
+    table.add_column("Options", justify="left")
+    table.add_column("Details", justify="left", max_width=30)
 
-    table.add_row("A.", "Add Name")
-    table.add_row("B.", "Add Ingredients")
-    table.add_row("C.", "Add Method")
-    table.add_row("D.", "Add Ready In Minutes")
-    table.add_row("E.", "Serving Size")
-    table.add_row("F.", "Description")
-    table.add_column("S.", "Submit")
-    table.add_row("X.", "Exit")
+    table.add_row("A.", "Add Name", f"{current_recipe.get_name()}") # Add a name
+    table.add_row("B.", "Add Ingredients", f"{get_count(current_recipe.get_ingredients(), 'Ingredient')}") # Add a name // sub menu)
+    table.add_row("C.", "Add Method", f"{get_count(current_recipe.get_methods(), 'Step')}") # Add Methods // sub menu
+    table.add_row("D.", "Add Ready In Minutes", f"{current_recipe.get_ready_in_minutes()}") # Add a prepare time
+    table.add_row("E.", "Add Serving Size", f"{current_recipe.get_serves()}") # Add a serving size
+    table.add_row("F.", "Description", f"{current_recipe.get_description()}") # Add a description
+    table.add_row("S.", "Submit") # Submits recipe
+    table.add_row("X.", "Exit") # Exit recipe menu
 
     console.print(table)
-
-    print(f"A. Add Name: {current_recipe.get_name()}") # Add a name
-    print(f"B. Ingredients: {get_count(current_recipe.get_ingredients(), 'Ingredient')}") # Add a name // sub menu
-    print(f"C. Add Method: {get_count(current_recipe.get_methods(), 'Step')}") # Add Methods // sub menu
-    print(f"D. Add Ready In Minutes: {current_recipe.get_ready_in_minutes()}") # Add a prepare time
-    print(f"E. Serving Size: {current_recipe.get_serves()}") # Add a serving size
-    print(f"F. Add Description: {current_recipe.get_description()}") # Add a description
-    print("S. Submit & Save") # Submits recipe
-    print("X. Cancel") # Exit recipe menu
 
     return input("Enter Selection: ").lower()
 
 def method_sub_menu():
     print("\n")
-    print("*" * 21 + " Method " + "*" * 21)
-    print("A. Add Step") # Add a new steps
-    print("B. Edit Step") # Edit a step
-    print("S. Submit") # Submit method
+
+    table = Table(title="Method",
+                  title_style="bold",
+                  title_justify="left")
+
+    table.add_column()
+    table.add_column("Options", justify="left",min_width=20)
+
+    table.add_row("A.", "Add Step") # Add a new steps
+    table.add_row("B.", "Edit Step") # Edit a step
+    table.add_row("S.", "Submit") # Submit method
+
+    console.print(table)
 
     return input("Enter Selection: ").lower()
 
@@ -172,6 +187,16 @@ def add_step(steps_count, current_recipe):
 def edit_step(current_recipe):
     methods = current_recipe.get_methods()
 
+    print("")
+    table = Table(title="Edit Step",
+                  title_style="bold",
+                  title_justify="left")
+    
+    table.add_column("Step", justify="left")
+    table.add_column("Description", justify="left", max_width=50)
+    # Set word wrapping for the Description column
+    table.columns[1].overflow = "fold"
+
     # Counts which step to edit
     count = 0
     for method in methods:
@@ -179,10 +204,13 @@ def edit_step(current_recipe):
 
         # Edit the selected step
         count += 1
-        edit_step = f"Step {count}:"
-        print(f"\n{edit_step}")
+        # edit_step = f"Step {count}:"
+        # print(f"\n{edit_step}")
 
-        print(method)
+        table.add_row(f"Step {count}:",f"{method}")
+    
+    console.print(table)
+
 
     # Find the item index of the method
     while True:
@@ -199,7 +227,6 @@ def edit_step(current_recipe):
 
     if removed_step != 0:
         print("\n")
-        print("*" * 22 + " Edit " + "*" * 22)
 
         # Remove leading/trailing whitespace
         current_edit = methods[removed_step - 1]
@@ -270,8 +297,9 @@ def new_recipe():
 
             # Add ingredients
             case "b":
+                current_recipe.clear_ingredients()
                 current_recipe.add_ingredients(store_ingredient(True, ingredients_set))
-
+            
             # Add method
             case "c":
                 new_method(current_recipe)  
@@ -281,11 +309,11 @@ def new_recipe():
                 current_recipe.set_ready_in_minutes(input("Ready In Minutes: "))
 
             # Add serving size
-            case "f":
+            case "e":
                 current_recipe.set_serves(input("Serving Size: "))
 
             # Add description
-            case "g":
+            case "f":
                 current_recipe.set_description(input("Description: "))
             
              # Submits recipe to csv
