@@ -131,7 +131,7 @@ def recipes_sub_menu(current_recipe):
                   title_style="bold",
                   title_justify="left")
 
-    table.add_column()
+    table.add_column(width=3)
     table.add_column("Options", justify="left")
     table.add_column("Details", justify="left", max_width=30)
 
@@ -155,8 +155,8 @@ def method_sub_menu():
                   title_style="bold",
                   title_justify="left")
 
-    table.add_column()
-    table.add_column("Options", justify="left",min_width=20)
+    table.add_column(width=3)
+    table.add_column("Options", justify="left",width=20)
 
     table.add_row("A.", "Add Step") # Add a new steps
     table.add_row("B.", "Edit Step") # Edit a step

@@ -20,7 +20,7 @@ def print_inital_welcome():
 
     table = Table()
 
-    table.add_column("Culinary Companion",justify="center", min_width=55)
+    table.add_column("Culinary Companion",justify="center", width=55)
     table.add_row(welcome_msg,)
 
     console.print(table)
@@ -38,8 +38,8 @@ def create_menu():
                         title_style="bold",
                         title_justify="left")
 
-    table.add_column()
-    table.add_column("Options", justify="left", min_width=50)
+    table.add_column(width=3)
+    table.add_column("Options", justify="left", width=50)
 
     table.add_row("A.", "Add New Recipe")
     table.add_row("B.", "Add Random Recipe")
@@ -107,9 +107,9 @@ def display_all_recipes(all_recipes, action):
     table = Table(title=f"{action} Recipes",
                         title_style="bold",
                         title_justify="left")
-    table.add_column("No.", justify="left")
-    table.add_column("Name", justify="left", width=35)
-    table.add_column("Description", justify="left", width=70)
+    table.add_column("No.", justify="left", min_width=3)
+    table.add_column("Name", justify="left", width=30)
+    table.add_column("Description", justify="left", width=65)
 
     count = 0
     for recipe in all_recipes:
@@ -277,8 +277,8 @@ def recipe_by_ingredient():
                   title_justify="left",
                   title_style="bold")
     
-        table.add_column()
-        table.add_column("Options",justify="left",min_width=50)
+        table.add_column(width=3)
+        table.add_column("Options",justify="left",width=50)
 
         # Add all recipes from api to a list
         available_recipes = []
