@@ -13,7 +13,7 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 - <b>User-Friendly Interface:</b> The app is designed to be really easy to use. Simple menus listed with selection options only consisting of a single letter or number.
 
 <p align="center">
-<img src="docs/Screenshots/welcome.JPG"/>
+    <img src="docs/Screenshots/welcome.JPG"/>
 </p>
 
 #### Source Control
@@ -35,9 +35,13 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 - https://rapidapi.com/spoonacular/api/recipe-food-nutrition - Recipe - Food - Nutrition By David
 
-##### Description
+#### Description
 
 The spoonacular Recipe - Food - Nutrition API gives you to access to thousands of recipes, storebought packaged foods, and chain restaurant menu items. Our food ontology and semantic recipe search engine makes it possible to search for recipes using natural language queries, such as “gluten free brownies without sugar” or “low fat vegan cupcakes.” You can automatically calculate the nutritional information for any recipe, estimate recipe costs, visualize ingredient lists, find recipes for what’s in your fridge, find recipes based on special diets, nutritional requirements, or favorite ingredients, classify recipes into types and cuisines, convert ingredient amounts, or even compute an entire meal plan. With our powerful API, you can create many kinds of food and nutrition apps.
+
+<p align="center">
+    <img src="docs/API/api_title.JPG"/>
+</p>
 
 Special diets/dietary requirements currently available include: vegan, vegetarian, pescetarian, gluten free, grain free, dairy free, high protein, low sodium, low carb, Paleo, Primal, ketogenic, and more.
 
@@ -54,8 +58,7 @@ Special diets/dietary requirements currently available include: vegan, vegetaria
 ### Get Random Recipes
 
 ```https
-  GET Get Random Recipes
-  url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random"
+  GET url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random"
 ```
 
 | Parameter | Type     | Description                |
@@ -71,5 +74,9 @@ Special diets/dietary requirements currently available include: vegan, vegetaria
 | Parameter | Type     | Description                                |
 | :-------- | :------- | :----------------------------------------- |
 | `list`    | `string` | **Required**. List of Ingredients to fetch |
+
+<p align="center">
+    <img src="docs/API/api_stats.JPG"/>
+</p>
 
 ## Credits
