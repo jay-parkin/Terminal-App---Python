@@ -27,6 +27,21 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 - Python 3.10.12 or [higher](https://www.python.org/downloads/)
 
+### Installation
+
+<b>Unix based Systems - Linux & macOS</b>
+
+1. Open a Terminal
+2. Clone the GitHub repository using SSH:</br>
+   `git clone https://github.com/jay-parkin/Terminal-App-Python.git`
+
+3. Third item
+
+```bash
+  npm install my-project
+  cd my-project
+```
+
 ### Configuration
 
 ## Usage
