@@ -1,6 +1,5 @@
 # Digital Dish created by Python
 
-- [Table of Content](#table-of-content)
 - [Description](#description)
 - [Key Features](#key-features)
 - [Source Control](#source-control)
@@ -20,7 +19,7 @@
 
 Digital Dish is like having a personal assistant for food lovers and home cooks. It’s designed in Python to be user-friendly and packed with great features that make managing, finding, and cooking amazing recipes a breeze.
 
-#### Key Features
+### Key Features
 
 - <b>Create Recipe:</b> Input details recipe information including: Name, Ingredients, Methods, Ready in Minutes, Serving Size, Description.
 - <b>Random Recipe Generator:</b> Explore new culinary adventures by fetching random recipes from an external API, sparking creativity in the kitchen.
@@ -32,12 +31,12 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 <img src="docs/screenshots/welcome.JPG"/>
 </p>
 
-#### Source Control
+### Source Control
 
 - GitHub Repository - [https://github.com/jay-parkin/Terminal-App-Python](https://github.com/jay-parkin/Terminal-App-Python)
 - Clone Repository - git clone https://github.com/jay-parkin/Terminal-App-Python.git
 
-#### Features
+### Features
 
 The main menu is the primary source of the application which holds most of the features.
 
@@ -96,15 +95,18 @@ while choice != "x":
 ```
 
 </details>
+</br>
 
-1. <b>Recipe Creation:</b>
+#### <b>Recipe Creation:</b>
 
-   - Users can input recipe details such as name, ingredients, method, time, servings and description
-   - The user can edit the details of each value independently which then will save as a Recipe object and saved into a list with the other already added recipes.
-   - I choice to have this feature perform using a `match case` as I find these very friendly when dealing with predetermined selections. (You will find this has been done through out the application where a menu is needed.)
-     - The user is given a list of options to select from.
-     - The choice made is stored as a String and passed through the match case
-     - If the user doesn't select the exit options (which are s & x), a function will perform such as 'A' for `Add a name` or 'F' for `Description`
+_<b>Menu</b>_
+
+- Users can input recipe details such as name, ingredients, method, time, servings and description
+- The user can edit the details of each value independently which then will save as a Recipe object and inserted into a list with the other already added recipes.
+- I choice to have this feature perform using a `match case` as I find these very friendly when dealing with predetermined selections. (You will find this has been done through out the application where a menu is needed.)
+  - The user is given a list of options to select from.
+  - The choice made is stored as a String and passed through the match case
+  - If the user doesn't select the exit options (which are s & x), a function will perform such as 'A' for `Add a name` or 'F' for `Description`
 
 <p align="center">
     <img src="docs/screenshots/new_recipe.JPG"/>
@@ -167,8 +169,20 @@ while choice != "x":
 ```
 
 </details>
+</br>
 
-2. Add Random Recipe
+_<b>Add Method</b>_
+
+I will move onto Add Method as adding Ingredients will be covered soon.
+
+- `Add Method` allows the user to insert the steps it takes to create a recipe
+- These steps are inserted into a `List[]`. I choice this because they are ordered and are also mutable data types (perfect for a list of steps).
+
+<p align="center">
+    <img src="docs/screenshots/add_method.JPG"/>
+</p>
+
+<!-- ~~~~~~START HERE~~~~~~ -->
 
 ## Getting Started
 
@@ -182,17 +196,18 @@ Follow the instructions below to install the Digital Dish application.<br>
 This application is run via the terminal and requires the correct Python3 version and project folder structure.
 Please copy the follow instructions(where applicable) and paste directly into your linux terminal.
 
-<b>Unix based Systems - Linux & macOS</b>
+<details>
+<summary><b>Unix based Systems - Linux & macOS</b></summary>
 
 1.  Open a Terminal
 2.  Clone the GitHub repository:</br>
-    SSH
+    via SSH
 
     ```bash
     git clone git@github.com:jay-parkin/Terminal-App-Python.git
     ```
 
-    HTTPS
+    via HTTPS
 
     ```bash
     git clone https://github.com/jay-parkin/Terminal-App-Python.git
@@ -211,17 +226,21 @@ Please copy the follow instructions(where applicable) and paste directly into yo
     ```
 
 5.  Run the `run.sh` script to start the application
+
     ```bash
     ./run.sh
     ```
 
+</details>
 </br>
-<b>Windows</b>
 
-1.  Install WSL via [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)
+<details>
+<summary><b>Windows</b></summary>
 
-2.  Open a WSL terminal
-3.  Clone the GitHub repository (select only 1 method):</br>
+6.  Install WSL via [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+7.  Open a WSL terminal
+8.  Clone the GitHub repository (select only 1 method):</br>
     SSH
 
     ```bash
@@ -234,22 +253,25 @@ Please copy the follow instructions(where applicable) and paste directly into yo
     git clone https://github.com/jay-parkin/Terminal-App-Python.git
     ```
 
-4.  Navigate to `/src` directory in the cloned repository:
+9.  Navigate to `/src` directory in the cloned repository:
 
     ```bash
     cd Terminal-App-Python/src
     ```
 
-5.  Created an executable from the `run.sh` shell script:
+10. Created an executable from the `run.sh` shell script:
 
     ```bash
     chmod +x run.sh
     ```
 
-6.  Run the `run.sh` script to start the application
+11. Run the `run.sh` script to start the application
+
     ```bash
     ./run.sh
     ```
+
+</details>
 
 ## Usage
 
