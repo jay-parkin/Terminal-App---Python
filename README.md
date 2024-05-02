@@ -35,7 +35,7 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 #### Get Recipe Information
 
-```http
+```https
   GET url = f"https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/{id}/information"
 ```
 
