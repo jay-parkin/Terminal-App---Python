@@ -53,8 +53,9 @@ Special diets/dietary requirements currently available include: vegan, vegetaria
 
 ####SS Get Random Recipes
 
-```https
-  GET url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random"
+```http
+  GET Get Random Recipes
+  url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random"
 ```
 
 | Parameter | Type     | Description                |
