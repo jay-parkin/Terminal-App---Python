@@ -42,6 +42,7 @@ The main menu is the primary source of the application which holds most of the f
     <img src="docs/screenshots/new_recipe.JPG"/>
 </p>
 
+<details>
 <summary>Click to expand code</summar>
 
 ```python
@@ -94,6 +95,7 @@ The main menu is the primary source of the application which holds most of the f
 
          case _:
              print("Error - invalid selection!")
+</details>
 ```
 
 ## Getting Started
