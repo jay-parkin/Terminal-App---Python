@@ -17,8 +17,12 @@ higher_version=$(echo -e "$desired_version\n$installed_version" | sort -V | head
 # Compare the sorted first version with the desired version
 if [[ "$higher_version" == "$desired_version" ]]; then
     echo "Current Python installed satisfies the required version: $desired_version."
-    echo "Proceeding to install required depende
+    echo "Proceeding to install required dependencies..."
+
+    chmod +x scripts/init_venv.sh
+    ./scripts/init_venv.sh
+
 else
     echo "Current installed Python-$installed_version does not meet required version: $desired_version."
-    echo "Please update Python and try again.
+    echo "Please update Python and try again."
 fi
