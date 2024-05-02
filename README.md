@@ -1,7 +1,10 @@
 # Digital Dish created by Python
 
 - [Table of Content](#table-of-content)
-- [Description](#description) + [Key Features](#key-features) + [Source Control](#source-control) + [Features](#features)
+- [Description](#description)
+- [Key Features](#key-features)
+- [Source Control](#source-control)
+- [Features](#features)
 - [Getting Started](#getting-started)
   - [Prerequisties](#prerequisties)
   - [Installation](#installation)
