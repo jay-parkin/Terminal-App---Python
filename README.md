@@ -17,4 +17,5 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 </p>
 
 #### Source Control
-- GitHub Repository - https://github.com/jay-parkin/Terminal-App---Python
+
+- GitHub Repository - [https://github.com/jay-parkin/Terminal-App-Python](https://github.com/jay-parkin/Terminal-App-Python)
