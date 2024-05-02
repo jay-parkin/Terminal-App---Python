@@ -25,7 +25,7 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 ### Prerequisties
 
-- Python 3.10.12 or `higher`
+- Python 3.10.12 or [higher](https://www.python.org/downloads/)
 
 ### Configuration
 
@@ -33,9 +33,17 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 ## API Reference
 
+- https://rapidapi.com/spoonacular/api/recipe-food-nutrition - Recipe - Food - Nutrition By David
+
+##### Description
+
+The spoonacular Recipe - Food - Nutrition API gives you to access to thousands of recipes, storebought packaged foods, and chain restaurant menu items. Our food ontology and semantic recipe search engine makes it possible to search for recipes using natural language queries, such as “gluten free brownies without sugar” or “low fat vegan cupcakes.” You can automatically calculate the nutritional information for any recipe, estimate recipe costs, visualize ingredient lists, find recipes for what’s in your fridge, find recipes based on special diets, nutritional requirements, or favorite ingredients, classify recipes into types and cuisines, convert ingredient amounts, or even compute an entire meal plan. With our powerful API, you can create many kinds of food and nutrition apps.
+
+Special diets/dietary requirements currently available include: vegan, vegetarian, pescetarian, gluten free, grain free, dairy free, high protein, low sodium, low carb, Paleo, Primal, ketogenic, and more.
+
 #### Get Recipe Information
 
-```http
+```https
   GET url = f"https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/{id}/information"
 ```
 
@@ -43,11 +51,10 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 | :-------- | :------- | :---------------------------------- |
 | `id`      | `string` | **Required**. Id of recipe to fetch |
 
-#### Get Random Recipes
+####SS Get Random Recipes
 
-```http
-  GET Get Random Recipes
-  url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random"
+```https
+  GET url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random"
 ```
 
 | Parameter | Type     | Description                |
@@ -56,7 +63,7 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 #### Get Search Recipes by Ingredients
 
-```http
+```https
   GET url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients'
 ```
 
