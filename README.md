@@ -13,13 +13,25 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 - <b>User-Friendly Interface:</b> The app is designed to be really easy to use. Simple menus listed with selection options only consisting of a single letter or number.
 
 <p align="center">
-    <img src="docs/Screenshots/welcome.JPG"/>
+<img src="docs/Screenshots/welcome.JPG"/>
 </p>
 
 #### Source Control
 
 - GitHub Repository - [https://github.com/jay-parkin/Terminal-App-Python](https://github.com/jay-parkin/Terminal-App-Python)
 - Clone Repository - git clone https://github.com/jay-parkin/Terminal-App-Python.git
+
+#### Features
+
+The main menu is the primary source of the application which holds most of the features.
+
+<p align="center">
+<img src="docs/screenshots/main.JPG">
+</p>
+
+1. <b>Recipe Creation:</b>
+
+   - Users can input recipe details such as name, ingredients, method, time, servings and description
 
 ## Getting Started
 
@@ -102,13 +114,11 @@ Please copy the follow instructions(where applicable) and paste directly into yo
     ./run.sh
     ```
 
-### Configuration
-
 ## Usage
 
 ## API Reference
 
-_I didn't write this api, it comes from the amazing source found below_
+###### Full Attribution: _I didn't write this api, it comes from the amazing source found below_
 
 - https://rapidapi.com/spoonacular/api/recipe-food-nutrition - Recipe - Food - Nutrition By David
 
@@ -117,7 +127,7 @@ _I didn't write this api, it comes from the amazing source found below_
 The spoonacular Recipe - Food - Nutrition API gives you to access to thousands of recipes, storebought packaged foods, and chain restaurant menu items. Our food ontology and semantic recipe search engine makes it possible to search for recipes using natural language queries, such as “gluten free brownies without sugar” or “low fat vegan cupcakes.” You can automatically calculate the nutritional information for any recipe, estimate recipe costs, visualize ingredient lists, find recipes for what’s in your fridge, find recipes based on special diets, nutritional requirements, or favorite ingredients, classify recipes into types and cuisines, convert ingredient amounts, or even compute an entire meal plan. With our powerful API, you can create many kinds of food and nutrition apps.
 
 <p align="center">
-    <img src="docs/API/api_title.JPG"/>
+    <img src="docs/api/api_title.JPG"/>
 </p>
 
 Special diets/dietary requirements currently available include: vegan, vegetarian, pescetarian, gluten free, grain free, dairy free, high protein, low sodium, low carb, Paleo, Primal, ketogenic, and more.
@@ -155,7 +165,7 @@ Special diets/dietary requirements currently available include: vegan, vegetaria
 | `list`    | `string` | **Required**. List of Ingredients to fetch |
 
 <p align="center">
-    <img src="docs/API/api_stats.JPG"/>
+    <img src="docs/api/api_stats.JPG"/>
 </p>
 
 ## Credits
