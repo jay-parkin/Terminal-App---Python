@@ -1,5 +1,18 @@
 # Digital Dish created by Python
 
+- [Table of Content](#table-of-content)
+- [Description](#description) + [Key Features](#key-features) + [Source Control](#source-control) + [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisties](#prerequisties)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [API Reference](#api-reference)
+  - [Description](#description-1)
+  - [Get Recipe Information](#get-recipe-information)
+  - [Get Random Recipes](#get-random-recipes)
+  - [Get Search Recipes by Ingredients](#get-search-recipes-by-ingredients)
+- [Credits](#credits)
+
 ## Description
 
 Digital Dish is like having a personal assistant for food lovers and home cooks. It’s designed in Python to be user-friendly and packed with great features that make managing, finding, and cooking amazing recipes a breeze.
@@ -33,7 +46,7 @@ The main menu is the primary source of the application which holds most of the f
 <summary>Click to expand code</summary>
 
 ```python
-# Loop menu until user exitsa
+# Loop menu until user exits
 choice = ""
 while choice != "x":
     choice = create_menu()
@@ -80,7 +93,6 @@ while choice != "x":
 ```
 
 </details>
-<br>
 
 1. <b>Recipe Creation:</b>
 
@@ -89,7 +101,7 @@ while choice != "x":
    - I choice to have this feature perform using a `match case` as I find these very friendly when dealing with predetermined selections. (You will find this has been done through out the application where a menu is needed.)
      - The user is given a list of options to select from.
      - The choice made is stored as a String and passed through the match case
-     - If the user doesn't select the exit options (which are s & x), a function will perform such as 'A' for `Add a name`
+     - If the user doesn't select the exit options (which are s & x), a function will perform such as 'A' for `Add a name` or 'F' for `Description`
 
 <p align="center">
     <img src="docs/screenshots/new_recipe.JPG"/>
@@ -152,6 +164,8 @@ while choice != "x":
 ```
 
 </details>
+
+2. Add Random Recipe
 
 ## Getting Started
 

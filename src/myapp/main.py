@@ -321,7 +321,7 @@ def recipe_by_ingredient():
 # App starts here
 print_inital_welcome()
 
-# Loop menu until user exitsa
+# Loop menu until user exits
 choice = ""
 while choice != "x":
     choice = create_menu()
