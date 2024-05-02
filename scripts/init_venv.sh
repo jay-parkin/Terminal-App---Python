@@ -16,9 +16,10 @@ if [ -d "$VENV_PATH" ]; then
     # Activate the virtual environment
     source "$VENV_PATH/bin/activate"
 
-    # Now you can install dependencies from requirements.txt
+    # Now install dependencies from requirements.txt
     chmod +x scripts/init_dependencies.sh
     ./scripts/init_dependencies.sh
 else
     echo "Failed to create virtual environment."
+    echo "Please try again."
 fi

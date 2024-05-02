@@ -14,4 +14,19 @@
 # soupsieve==2.5
 # urllib3==2.2.1
 
+#!/bin/bash
+
+# Run pip install
 pip install -r requirements.txt
+
+# Check the exit status
+if [ $? -eq 0 ]; then
+    echo "Installation successful"
+
+    # Starting app
+    chmod +x scripts/start_app.sh
+    ./scripts/start_app.sh
+else
+    echo "Failed to install requirements."
+    echo "Please and try again."
+fi

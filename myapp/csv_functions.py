@@ -5,8 +5,8 @@ from recipes import Recipes
 from ingredients import Ingredients
 
 # Stored in the data folder
-recipes_file = "data/my_recipes.csv"
-ingredients_file = "data/my_ingredients.csv"
+recipes_file = "myapp/data/my_recipes.csv"
+ingredients_file = "myapp/data/my_ingredients.csv"
 
 # Store recipe into a csv with headers
 def write_recipes_to_csv(recipes, mode):
