@@ -38,10 +38,13 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
    git clone git@github.com:jay-parkin/Terminal-App-Python.git
    ```
    HTTPS
-   ```
+   ```bash
    git clone https://github.com/jay-parkin/Terminal-App-Python.git
    ```
-3. Third item
+3. Navigate to `/src` directory in the cloned repository:
+   ```bash
+   cd Terminal-App-Python/src
+   ```
 
 <!-- ```bash
   npm install my-project
