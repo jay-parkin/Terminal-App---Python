@@ -33,58 +33,68 @@ The main menu is the primary source of the application which holds most of the f
 
    - Users can input recipe details such as name, ingredients, method, time, servings and description
    - The user can edit the details of each value independently which then will save as a Recipe object and saved into a list with the other already added recipes.
+   - I choice to have this feature perform using a `match case` as I find these very friendly when dealing with predetermined selections. (You will find this has been done through out the application where a menu is needed.)
+     - The user is given a list of options to select from.
+     - The choice made is stored as a String and passed through the match case
+     - If the user doesn't select the exit options (which are s & x), a function will perform such as 'A' for `Add a name`
 
-   ```
-   # Loop menu until user exits
-    choice = ""
-    while choice not in ["s", "x"]:
-        choice = recipes_sub_menu(current_recipe)
+<p align="center">
+    <img src="docs/screenshots/new_recipe.JPG"/>
+</p>
 
-        # Add switch case to decide selection
-        match choice:
-            # Add a name
-            case "a":
-                current_recipe.set_name(input("Name: "))
+<summary>Click to expand code</summar>
 
-            # Add ingredients
-            case "b":
-                current_recipe.clear_ingredients()
-                current_recipe.add_ingredients(store_ingredient(True, ingredients_set))
+```python
+# Loop menu until user exits
+ choice = ""
+ while choice not in ["s", "x"]:
+     choice = recipes_sub_menu(current_recipe)
 
-            # Add method
-            case "c":
-                new_method(current_recipe)
+     # Add switch case to decide selection
+     match choice:
+         # Add a name
+         case "a":
+             current_recipe.set_name(input("Name: "))
 
-            # Add ready_in_minutes
-            case "d":
-                current_recipe.set_ready_in_minutes(input("Ready In Minutes: "))
+         # Add ingredients
+         case "b":
+             current_recipe.clear_ingredients()
+             current_recipe.add_ingredients(store_ingredient(True, ingredients_set))
 
-            # Add serving size
-            case "e":
-                current_recipe.set_serves(input("Serving Size: "))
+         # Add method
+         case "c":
+             new_method(current_recipe)
 
-            # Add description
-            case "f":
-                current_recipe.set_description(input("Description: "))
+         # Add ready_in_minutes
+         case "d":
+             current_recipe.set_ready_in_minutes(input("Ready In Minutes: "))
 
-             # Submits recipe to csv
-            case "s":
-                # If a name exist than the recipe exist
-                if current_recipe.get_name():
-                    from csv_functions import write_recipes_to_csv
+         # Add serving size
+         case "e":
+             current_recipe.set_serves(input("Serving Size: "))
 
-                    write_recipes_to_csv([current_recipe], "a")
-                else:
-                    # Don't exit this menu is it is unable to save
-                    choice = -1
-                    print("Error - Recipe name is required.")
+         # Add description
+         case "f":
+             current_recipe.set_description(input("Description: "))
 
-            case "x":
-                break
+          # Submits recipe to csv
+         case "s":
+             # If a name exist than the recipe exist
+             if current_recipe.get_name():
+                 from csv_functions import write_recipes_to_csv
 
-            case _:
-                print("Error - invalid selection!")
-   ```
+                 write_recipes_to_csv([current_recipe], "a")
+             else:
+                 # Don't exit this menu is it is unable to save
+                 choice = -1
+                 print("Error - Recipe name is required.")
+
+         case "x":
+             break
+
+         case _:
+             print("Error - invalid selection!")
+```
 
 ## Getting Started
 
