@@ -33,7 +33,10 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 1. Open a Terminal
 2. Clone the GitHub repository using SSH:</br>
-   `git clone https://github.com/jay-parkin/Terminal-App-Python.git`
+
+```
+git clone https://github.com/jay-parkin/Terminal-App-Python.git
+```
 
 3. Third item
 
