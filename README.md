@@ -13,7 +13,7 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 - <b>User-Friendly Interface:</b> The app is designed to be really easy to use. Simple menus listed with selection options only consisting of a single letter or number.
 
 <p align="center">
-<img src="docs/Screenshots/welcome.JPG"/>
+<img src="docs/screenshots/welcome.JPG"/>
 </p>
 
 #### Source Control
