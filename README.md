@@ -29,6 +29,59 @@ The main menu is the primary source of the application which holds most of the f
 <img src="docs/screenshots/main.JPG">
 </p>
 
+<details>
+<summary>Click to expand code</summary>
+
+```python
+# Loop menu until user exitsa
+choice = ""
+while choice != "x":
+    choice = create_menu()
+
+    # Add switch case to decide selection
+    match choice:
+        # Add new recipe
+        case "a":
+            new_recipe()
+
+        # Add random recipe
+        case "b":
+            recipe = Recipes()
+            #  Find the id from a random reicpe and pass it
+            #  into a function to pull the rest of the info
+            recipe = get_recipe_from_api(get_recipe_id(random_recipe_request()))
+
+            write_recipes_to_csv([recipe], "a")
+
+        # Generate recipe using my ingredients
+        case "c":
+            recipe_by_ingredient()
+
+        # Store my ingredients
+        case "d":
+            store_ingredient(False)
+
+        # Delete recipe
+        case "e":
+            view_recipes("Delete")
+
+        # View recipes // read csv
+        case "f":
+            view_recipes("View")
+
+        # Exit app
+        case "x":
+            print_goodbye()
+            break
+
+        case _:
+            print("Error - Invalid selection!")
+
+```
+
+</details>
+<br>
+
 1. <b>Recipe Creation:</b>
 
    - Users can input recipe details such as name, ingredients, method, time, servings and description
@@ -43,9 +96,9 @@ The main menu is the primary source of the application which holds most of the f
 </p>
 
 <details>
-    <summary>Click to expand code</summar>
+<summary>Click to expand code</summary>
 
-    ```python
+```python
     # Loop menu until user exits
     choice = ""
     while choice not in ["s", "x"]:
@@ -78,7 +131,7 @@ The main menu is the primary source of the application which holds most of the f
             case "f":
                 current_recipe.set_description(input("Description: "))
 
-            # Submits recipe to csv
+             # Submits recipe to csv
             case "s":
                 # If a name exist than the recipe exist
                 if current_recipe.get_name():
@@ -95,7 +148,8 @@ The main menu is the primary source of the application which holds most of the f
 
             case _:
                 print("Error - invalid selection!")
-    ```
+
+```
 
 </details>
 
