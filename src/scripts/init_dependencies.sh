@@ -28,5 +28,5 @@ if [ $? -eq 0 ]; then
     ./scripts/start_app.sh
 else
     echo "Failed to install requirements."
-    echo "Please and try again."
+    echo "Please try removing .venv and try again."
 fi
