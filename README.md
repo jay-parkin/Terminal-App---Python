@@ -19,3 +19,49 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 #### Source Control
 
 - GitHub Repository - [https://github.com/jay-parkin/Terminal-App-Python](https://github.com/jay-parkin/Terminal-App-Python)
+- Clone Repository - git clone https://github.com/jay-parkin/Terminal-App-Python.git
+
+## Getting Started
+
+### Prerequisties
+
+- Python 3.10.12 or higher
+
+### Configuration
+
+## Usage
+
+## API Reference
+
+#### Get Recipe Information
+
+```http
+  GET url = f"https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/{id}/information"
+```
+
+| Parameter | Type     | Description                         |
+| :-------- | :------- | :---------------------------------- |
+| `id`      | `string` | **Required**. Id of recipe to fetch |
+
+#### Get Random Recipes
+
+```http
+  GET Get Random Recipes
+  url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random"
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+
+#### Get Search Recipes by Ingredients
+
+```http
+  GET url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients'
+```
+
+| Parameter | Type     | Description                                |
+| :-------- | :------- | :----------------------------------------- |
+| `list`    | `string` | **Required**. List of Ingredients to fetch |
+
+## Credits
