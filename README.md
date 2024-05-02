@@ -29,6 +29,10 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 ### Installation
 
+Follow the instructions below to install the Digital Dish application.<br>
+This application is run via the terminal and requires the correct Python3 version and project folder structure.
+Please copy the follow instructions(where applicable) and paste directly into your linux terminal.
+
 <b>Unix based Systems - Linux & macOS</b>
 
 1.  Open a Terminal
@@ -68,7 +72,7 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 1.  Install WSL via [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)
 
 2.  Open a WSL terminal
-3.  Clone the GitHub repository:</br>
+3.  Clone the GitHub repository (select only 1 method):</br>
     SSH
 
     ```bash
@@ -87,11 +91,24 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
     cd Terminal-App-Python/src
     ```
 
+5.  Created an executable from the `run.sh` shell script:
+
+    ```bash
+    chmod +x run.sh
+    ```
+
+6.  Run the `run.sh` script to start the application
+    ```bash
+    ./run.sh
+    ```
+
 ### Configuration
 
 ## Usage
 
 ## API Reference
+
+_I didn't write this api, it comes from the amazing source found below_
 
 - https://rapidapi.com/spoonacular/api/recipe-food-nutrition - Recipe - Food - Nutrition By David
 
@@ -113,6 +130,7 @@ Special diets/dietary requirements currently available include: vegan, vegetaria
 
 | Parameter | Type     | Description                         |
 | :-------- | :------- | :---------------------------------- |
+| `api_key` | `string` | **Required**. Your API key          |
 | `id`      | `string` | **Required**. Id of recipe to fetch |
 
 #### Get Random Recipes
@@ -133,6 +151,7 @@ Special diets/dietary requirements currently available include: vegan, vegetaria
 
 | Parameter | Type     | Description                                |
 | :-------- | :------- | :----------------------------------------- |
+| `api_key` | `string` | **Required**. Your API key                 |
 | `list`    | `string` | **Required**. List of Ingredients to fetch |
 
 <p align="center">
