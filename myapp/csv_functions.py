@@ -4,13 +4,17 @@ import os
 from recipes import Recipes
 from ingredients import Ingredients
 
+# Stored in the data folder
+recipes_file = "data/my_recipes.csv"
+ingredients_file = "data/my_ingredients.csv"
+
 # Store recipe into a csv with headers
-def write_recipes_to_csv(recipes, file_name, mode):
+def write_recipes_to_csv(recipes, mode):
     try:
         print("Saving...")
-        file_exists = os.path.isfile(file_name)
+        file_exists = os.path.isfile(recipes_file)
 
-        with open(file_name, mode, newline="") as file:
+        with open(recipes_file, mode, newline="") as file:
             writer = csv.writer(file)
 
             # Write header only if the file doesn't exist
@@ -38,14 +42,14 @@ def write_recipes_to_csv(recipes, file_name, mode):
                     ])
 
     except IOError:
-        print(f"Error writing to '{file_name}'")
+        print(f"Error writing to '{recipes_file}'")
 
 # Read from csv at the start
-def read_recipes_from_csv(file_name):
+def read_recipes_from_csv():
     all_recipes = []
 
     try:
-        with open(file_name, mode="r", newline="") as file:
+        with open(recipes_file, mode="r", newline="") as file:
             reader = csv.DictReader(file)
 
             for row in reader:
@@ -67,18 +71,19 @@ def read_recipes_from_csv(file_name):
                 all_recipes.append(recipe)
 
     except FileNotFoundError:
-        print(f"Error - File '{file_name}' not found.")
+        print(f"Error - File '{recipes_file}' not found.")
         print("Creating New File...")
 
     return all_recipes
 
 # Store ingredients into a csv with headers
-def write_ingredients_to_csv(ingredients_set, file_name):
+def write_ingredients_to_csv(ingredients_set):
+    
     try:
         if len(ingredients_set) > 0:
             print("Writing to csv...")
 
-            with open(file_name, mode="w", newline="") as file:
+            with open(ingredients_file, mode="w", newline="") as file:
                 writer = csv.writer(file)
 
                 # Write header
@@ -91,14 +96,14 @@ def write_ingredients_to_csv(ingredients_set, file_name):
             print("Nothing to submit.")
 
     except IOError:
-        print(f"Error writing to '{file_name}'")
+        print(f"Error writing to '{ingredients_file}'")
 
 # Read from csv at the start
-def read_ingredients_from_csv(ingredients_set, file_name):
+def read_ingredients_from_csv(ingredients_set):
     ingredients_set = set()  # Set of ingredients
 
     try:
-        with open(file_name, mode="r") as file:
+        with open(ingredients_file, mode="r") as file:
             reader = csv.reader(file)
             next(reader)  # Skip header row
 
@@ -107,7 +112,7 @@ def read_ingredients_from_csv(ingredients_set, file_name):
                 ingredients_set.add(Ingredients(name, amount, unit))
 
     except FileNotFoundError:
-        print(f"File '{file_name}' not found.")
+        print(f"File '{ingredients_file}' not found.")
         print("Creating New File...")
     
     return ingredients_set

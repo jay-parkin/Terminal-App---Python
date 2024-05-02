@@ -7,8 +7,8 @@ from rich.table import Table
 from ingredients import store_ingredient, Ingredients
 from recipes import new_recipe, Recipes
 from csv_functions import read_recipes_from_csv, write_recipes_to_csv, read_ingredients_from_csv
-from recipe_api_request import random_recipe_request, recipe_by_ingredient_request, get_recipe_by_id
-from helper_functions import word_wrap, remove_html_tags, get_first_sentence
+from utils.recipe_api_request import random_recipe_request, recipe_by_ingredient_request, get_recipe_by_id
+from utils.helper_functions import word_wrap, remove_html_tags, get_first_sentence
 
 # Console to print the tables
 console = Console()
@@ -139,16 +139,10 @@ def delete_recipe(choice, all_recipes):
         all_recipes[choice - 1].set_status_inactive()
 
         # Write list of recipes without the inacive recipe selected
-        write_recipes_to_csv(all_recipes, "my_recipes.csv", "w")
+        write_recipes_to_csv(all_recipes, "w")
 
 def view_recipes(action):
-    # Change the padding size depending on the type of view
-    padding = 18
-    if action == "Delete":
-        padding = 17
-
-    # print("*" * padding + f" {action} Recipes " + "*" * padding)
-    all_recipes = read_recipes_from_csv("my_recipes.csv")
+    all_recipes = read_recipes_from_csv()
 
     display_all_recipes(all_recipes, action)
             
@@ -250,11 +244,9 @@ def recipe_by_ingredient():
         # save recipe
     # remove from list of 5
 
-    file_name = "my_ingredients.csv"
-    
     # Load ingredients
     ingredients_set = set() # Set of ingredients
-    ingredients_set = read_ingredients_from_csv(ingredients_set, file_name)
+    ingredients_set = read_ingredients_from_csv(ingredients_set)
 
     ingredients = ""
     # Extract name from ingredients
@@ -317,7 +309,7 @@ def recipe_by_ingredient():
                 recipe = Recipes()
                 recipe = get_recipe_from_api(id)
 
-                write_recipes_to_csv([recipe], "my_recipes.csv", "a")
+                write_recipes_to_csv([recipe], "a")
             else:
                 print("Invalid input. Please try again.")
         else:
@@ -347,7 +339,7 @@ while choice != "x":
             #  into a function to pull the rest of the info
             recipe = get_recipe_from_api(get_recipe_id(random_recipe_request()))
 
-            write_recipes_to_csv([recipe], "my_recipes.csv", "a")
+            write_recipes_to_csv([recipe], "a")
 
         # Generate recipe using my ingredients
         case "c":

@@ -277,9 +277,6 @@ def new_method(current_recipe):
                 print("Error - invalid selection!")
 
 def new_recipe():
-    # Stored locally
-    file_name = "my_recipes.csv"
-
     # initialise an empty object
     current_recipe = Recipes()
     ingredients_set = set() # Set of ingredients
@@ -322,7 +319,7 @@ def new_recipe():
                 if current_recipe.get_name():
                     from csv_functions import write_recipes_to_csv
 
-                    write_recipes_to_csv([current_recipe], file_name, "a") 
+                    write_recipes_to_csv([current_recipe], "a") 
                 else:
                     # Don't exit this menu is it is unable to save
                     choice = -1

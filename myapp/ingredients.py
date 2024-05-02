@@ -78,15 +78,13 @@ def view_ingredients(current_recipe_ingredients):
     console.print(table)
 
 def store_ingredient(in_recipe, current_recipe_ingredients=""):
-    # Stored locally
-    file_name = "my_ingredients.csv"
-    
+     
     # Load ingredients
     ingredients_set = set() # Set of ingredients
     
     # Load local import
     from csv_functions import read_ingredients_from_csv
-    ingredients_set = read_ingredients_from_csv(ingredients_set, file_name)
+    ingredients_set = read_ingredients_from_csv(ingredients_set)
 
     # Init count
     stored_ingredient_count = len(ingredients_set)
@@ -126,7 +124,7 @@ def store_ingredient(in_recipe, current_recipe_ingredients=""):
             case "s":
                 # Import local module
                 from csv_functions import write_ingredients_to_csv
-                write_ingredients_to_csv(ingredients_set, file_name)              
+                write_ingredients_to_csv(ingredients_set)              
 
             case _:
                 print("Error - Invalid selection!")
