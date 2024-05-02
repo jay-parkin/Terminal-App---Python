@@ -25,7 +25,7 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 ### Prerequisties
 
-- Python 3.10.12 or higher
+- Python 3.10.12 or `higher`
 
 ### Configuration
 
