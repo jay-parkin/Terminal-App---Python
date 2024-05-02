@@ -31,25 +31,61 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 
 <b>Unix based Systems - Linux & macOS</b>
 
-1. Open a Terminal
-2. Clone the GitHub repository:</br>
-   SSH
-   ```bash
-   git clone git@github.com:jay-parkin/Terminal-App-Python.git
-   ```
-   HTTPS
-   ```bash
-   git clone https://github.com/jay-parkin/Terminal-App-Python.git
-   ```
-3. Navigate to `/src` directory in the cloned repository:
-   ```bash
-   cd Terminal-App-Python/src
-   ```
+1.  Open a Terminal
+2.  Clone the GitHub repository:</br>
+    SSH
 
-<!-- ```bash
-  npm install my-project
-  cd my-project
-``` -->
+    ```bash
+    git clone git@github.com:jay-parkin/Terminal-App-Python.git
+    ```
+
+    HTTPS
+
+    ```bash
+    git clone https://github.com/jay-parkin/Terminal-App-Python.git
+    ```
+
+3.  Navigate to `/src` directory in the cloned repository:
+
+    ```bash
+    cd Terminal-App-Python/src
+    ```
+
+4.  Created an executable from the `run.sh` shell script:
+
+    ```bash
+    chmod +x run.sh
+    ```
+
+5.  Run the `run.sh` script to start the application
+    ```bash
+    ./run.sh
+    ```
+
+</br>
+<b>Windows</b>
+
+1.  Install WSL via [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+2.  Open a WSL terminal
+3.  Clone the GitHub repository:</br>
+    SSH
+
+    ```bash
+    git clone git@github.com:jay-parkin/Terminal-App-Python.git
+    ```
+
+    HTTPS
+
+    ```bash
+    git clone https://github.com/jay-parkin/Terminal-App-Python.git
+    ```
+
+4.  Navigate to `/src` directory in the cloned repository:
+
+    ```bash
+    cd Terminal-App-Python/src
+    ```
 
 ### Configuration
 
@@ -79,7 +115,7 @@ Special diets/dietary requirements currently available include: vegan, vegetaria
 | :-------- | :------- | :---------------------------------- |
 | `id`      | `string` | **Required**. Id of recipe to fetch |
 
-### Get Random Recipes
+#### Get Random Recipes
 
 ```https
   GET url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random"
