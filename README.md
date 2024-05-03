@@ -34,11 +34,11 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 ### Source Control
 
 - GitHub Repository - [https://github.com/jay-parkin/Terminal-App-Python](https://github.com/jay-parkin/Terminal-App-Python)
-- Clone Repository - git clone https://github.com/jay-parkin/Terminal-App-Python.git
+- Clone Repository - `git clone https://github.com/jay-parkin/Terminal-App-Python.git`
 
 ### Features
 
-The main menu is the primary source of the application which holds most of the features.
+The main menu is the main feature of the application which holds most of the operations.
 
 <p align="center">
 <img src="docs/screenshots/main.JPG">
@@ -99,14 +99,14 @@ while choice != "x":
 
 #### <b>Recipe Creation:</b>
 
-_<b>Menu</b>_
+_<b>New Recipe</b>_
 
-- Users can input recipe details such as name, ingredients, method, time, servings and description
-- The user can edit the details of each value independently which then will save as a Recipe object and inserted into a list with the other already added recipes.
+- Input and refine details such as the recipe's name, ingredients, preparation steps, cooking time, servings, and a descriptive narrative.
+- Each element of the user's recipe can be independently modified, ensuring the recipe is captured exactly as envisioned. Changes are saved into a structured Recipe object, which neatly collects alongside previously crafted recipes.
 - I choice to have this feature perform using a `match case` as I find these very friendly when dealing with predetermined selections. (You will find this has been done through out the application where a menu is needed.)
-  - The user is given a list of options to select from.
-  - The choice made is stored as a String and passed through the match case
-  - If the user doesn't select the exit options (which are s & x), a function will perform such as 'A' for `Add a name` or 'F' for `Description`
+- Choose from a list of options.
+  Selections are handled efficiently through a match case structure.
+- Continual interaction is encouraged, except when exiting options ('s' & 'x' are to submit or exit respectively) which trigger specific functions like `A` for adding a recipe name or `F` for the description.
 
 <p align="center">
     <img src="docs/screenshots/new_recipe.JPG"/>
@@ -173,16 +173,100 @@ _<b>Menu</b>_
 
 _<b>Add Method</b>_
 
-I will move onto Add Method as adding Ingredients will be covered soon.
+Moving beyond simple ingredient lists, the `Add Method` feature allows for detailed, step-by-step documentation of the recipe creation process:
 
-- `Add Method` allows the user to insert the steps it takes to create a recipe
-- These steps are inserted into a `List[]`. I choice this because they are ordered and are also mutable data types (perfect for a list of steps).
+- `Add Method` allows the user to insert detailed instructions into a mutable `List[]`, a perfect choice for an ordered and adaptable set of directions.
+
+```python
+# Add a new step to the method
+def add_step(steps_count, current_recipe):
+    next_step = f"Step {steps_count}:"
+    print(f"\n{next_step}")
+
+    method_step = input("Enter Step: ")
+    current_recipe.set_method(f"{method_step}")
+```
+
+- Input() will be asked of the user to `Enter Step:` and then stored into a local `method_step` variable.
+
+- This will then append each step into a list which is given to the Recipe object using a setter method.
+- This allows the user to add as many steps to a method as they wish.
+
+```python
+def set_method(self, method):
+    if method:
+        self._methods.append(method)
+```
+
+- Steps are editable, enabling ongoing refinement and perfecting of the recipe.
 
 <p align="center">
     <img src="docs/screenshots/add_method.JPG"/>
 </p>
 
-<!-- ~~~~~~START HERE~~~~~~ -->
+_<b>Submit Recipe</b>_
+
+- Submitting the recipes stores all the information provided (the name, ingredients, method, ready in minutes, serving size and description) into a Recipe() object.
+- Upon filling out the recipe `S. Submit` will become available.
+
+<p align="center">
+    <img src="docs/screenshots/new_recipe_filled.JPG"/>
+</p>
+
+- The submission process then passes the Recipe object to a file writer, systematically storing each attribute into a CSV file
+
+_<b>Csv Functions</b>_
+
+- Writing recipes to csv happens behind the scenes.
+- Each time an item is submitted or saved the `write_recipes_to_csv()` is called.
+- This function has 2 parameters; `Recipe object` & `mode`.
+- The Recipe object is stored inside the recipe.py class
+- While the mode refers to the operation of the writer class. [`w`, `a` or `r+`]
+
+<details>
+<summary>Click to expand code</summary>
+
+```python
+# Store recipe into a csv with headers
+def write_recipes_to_csv(recipes, mode):
+    try:
+        print("Saving...")
+        file_exists = os.path.isfile(recipes_file)
+
+        with open(recipes_file, mode, newline="") as file:
+            writer = csv.writer(file)
+
+            # Write header only if the file doesn't exist
+            if not file_exists or mode == "w":
+                writer.writerow(["Name", "Ingredients", "Ready In Minutes",
+                                 "Serving Size", "Steps", "Description", "Status"])
+
+            for current_recipe in recipes:
+                if current_recipe.get_status() == "active":
+                    # Join methods with a delimiter
+                    # methods_str = "; ".join(current_recipe.get_methods())
+                    methods_str = "; ".join([", ".join(method)
+                                             if isinstance(method, list)
+                                             else method for method in 
+                                             current_recipe.get_methods()])
+
+                    # Write recipe details including methods
+                    writer.writerow([
+                        current_recipe.get_name(),
+                        current_recipe.get_ingredients_csv(),
+                        current_recipe.get_ready_in_minutes(),
+                        current_recipe.get_serves(),
+                        methods_str,
+                        current_recipe.get_description(),
+                        current_recipe.get_status()
+                    ])
+
+    except IOError:
+        print(f"Error writing to '{recipes_file}'")
+```
+
+
+</details>
 
 ## Getting Started
 
@@ -237,10 +321,10 @@ Please copy the follow instructions(where applicable) and paste directly into yo
 <details>
 <summary><b>Windows</b></summary>
 
-6.  Install WSL via [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)
+1.  Install WSL via [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)
 
-7.  Open a WSL terminal
-8.  Clone the GitHub repository (select only 1 method):</br>
+2.  Open a WSL terminal
+3.  Clone the GitHub repository (select only 1 method):</br>
     SSH
 
     ```bash
@@ -253,19 +337,19 @@ Please copy the follow instructions(where applicable) and paste directly into yo
     git clone https://github.com/jay-parkin/Terminal-App-Python.git
     ```
 
-9.  Navigate to `/src` directory in the cloned repository:
+4.  Navigate to `/src` directory in the cloned repository:
 
     ```bash
     cd Terminal-App-Python/src
     ```
 
-10. Created an executable from the `run.sh` shell script:
+5.  Created an executable from the `run.sh` shell script:
 
     ```bash
     chmod +x run.sh
     ```
 
-11. Run the `run.sh` script to start the application
+6.  Run the `run.sh` script to start the application
 
     ```bash
     ./run.sh
