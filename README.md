@@ -112,6 +112,52 @@ _<b>New Recipe</b>_
     <img src="docs/screenshots/new_recipe.JPG"/>
 </p>
 
+</br>
+
+_<b>Add Method</b>_
+
+Moving beyond simple ingredient lists, the `Add Method` feature allows for detailed, step-by-step documentation of the recipe creation process:
+
+- `Add Method` allows the user to insert detailed instructions into a mutable `List[]`, a perfect choice for an ordered and adaptable set of directions.
+
+```python
+# Add a new step to the method
+def add_step(steps_count, current_recipe):
+    next_step = f"Step {steps_count}:"
+    print(f"\n{next_step}")
+
+    method_step = input("Enter Step: ")
+    current_recipe.set_method(f"{method_step}")
+```
+
+- Input() will be asked of the user to `Enter Step:` and then stored into a local `method_step` variable.
+
+- This will then append each step into a list which is given to the Recipe object using a setter method.
+- This allows the user to add as many steps to a method as they wish.
+
+```python
+def set_method(self, method):
+    if method:
+        self._methods.append(method)
+```
+
+- Steps are editable, enabling ongoing refinement and perfecting of the recipe.
+
+<p align="center">
+    <img src="docs/screenshots/add_method.JPG"/>
+</p>
+
+_<b>Submit Recipe</b>_
+
+- Submitting the recipes stores all the information provided (the name, ingredients, method, ready in minutes, serving size and description) into a Recipe() object.
+- Upon filling out the recipe `S. Submit` will become available.
+
+<p align="center">
+    <img src="docs/screenshots/new_recipe_filled.JPG"/>
+</p>
+
+- The submission process then passes the Recipe object to a file writer, systematically storing each attribute into a CSV file
+
 <details>
 <summary>Click to expand code</summary>
 
@@ -170,58 +216,19 @@ _<b>New Recipe</b>_
 
 </details>
 </br>
-
-_<b>Add Method</b>_
-
-Moving beyond simple ingredient lists, the `Add Method` feature allows for detailed, step-by-step documentation of the recipe creation process:
-
-- `Add Method` allows the user to insert detailed instructions into a mutable `List[]`, a perfect choice for an ordered and adaptable set of directions.
-
-```python
-# Add a new step to the method
-def add_step(steps_count, current_recipe):
-    next_step = f"Step {steps_count}:"
-    print(f"\n{next_step}")
-
-    method_step = input("Enter Step: ")
-    current_recipe.set_method(f"{method_step}")
-```
-
-- Input() will be asked of the user to `Enter Step:` and then stored into a local `method_step` variable.
-
-- This will then append each step into a list which is given to the Recipe object using a setter method.
-- This allows the user to add as many steps to a method as they wish.
-
-```python
-def set_method(self, method):
-    if method:
-        self._methods.append(method)
-```
-
-- Steps are editable, enabling ongoing refinement and perfecting of the recipe.
-
-<p align="center">
-    <img src="docs/screenshots/add_method.JPG"/>
-</p>
-
-_<b>Submit Recipe</b>_
-
-- Submitting the recipes stores all the information provided (the name, ingredients, method, ready in minutes, serving size and description) into a Recipe() object.
-- Upon filling out the recipe `S. Submit` will become available.
-
-<p align="center">
-    <img src="docs/screenshots/new_recipe_filled.JPG"/>
-</p>
-
-- The submission process then passes the Recipe object to a file writer, systematically storing each attribute into a CSV file
-
 _<b>Csv Functions</b>_
 
-- Writing recipes to csv happens behind the scenes.
-- Each time an item is submitted or saved the `write_recipes_to_csv()` is called.
-- This function has 2 parameters; `Recipe object` & `mode`.
-- The Recipe object is stored inside the recipe.py class
-- While the mode refers to the operation of the writer class. [`w`, `a` or `r+`]
+The function write_recipes_to_csv(recipes, mode) is all about saving a list of recipes into a CSV file, complete with headers if they're not already there. Let's walk through what happens when you call this function:
+
+- Initiating the save displays "Saving..." to let the user know that it's started the process of writing the recipes to a CSV file.
+- The function checks if the CSV file already exists using `os.path.isfile(recipes_file)`. This is crucial because it determines whether the headers need to be added to the file.
+- It opens the CSV file specified by recipes_file. The mode parameter can be set to `"w" to write` (which will overwrite any existing file) or `"a" to append` (which adds new data to the existing file). The newline="" parameter is there to make sure that newlines are handled correctly no matter what operating system you're on.
+- It sets up a `csv.writer` object, which makes it easy to write rows into the file.
+- If the file doesn't exist yet, or if the function overwrites it with mode "w", the function will add a header row first. The headers will be fields like `"Name", "Ingredients", "Ready In Minutes", "Serving Size", "Steps", "Description", and "Status"`.
+- The function goes through each recipe in the list provided. It only includes a recipe if its status is marked as "active".
+- Before writing out a recipe, if any of the method steps are lists, they are combined into one string, with each step separated by ";". If a step includes a list within it (like nested lists), those are joined by ",". This ensures all the steps are neatly formatted in one cell of the CSV.
+- For every active recipe, it writes a row in the CSV file with the recipe’s details such as name, ingredients, ready in minutes, serving size, method, description, and its status.
+- If there's any issue opening or writing to the file, an error message will pop up, indicating what went wrong with the file path.
 
 <details>
 <summary>Click to expand code</summary>
@@ -247,7 +254,7 @@ def write_recipes_to_csv(recipes, mode):
                     # methods_str = "; ".join(current_recipe.get_methods())
                     methods_str = "; ".join([", ".join(method)
                                              if isinstance(method, list)
-                                             else method for method in 
+                                             else method for method in
                                              current_recipe.get_methods()])
 
                     # Write recipe details including methods
@@ -265,7 +272,6 @@ def write_recipes_to_csv(recipes, mode):
         print(f"Error writing to '{recipes_file}'")
 ```
 
-
 </details>
 
 ## Getting Started
@@ -277,8 +283,8 @@ def write_recipes_to_csv(recipes, mode):
 ### Installation
 
 Follow the instructions below to install the Digital Dish application.<br>
-This application is run via the terminal and requires the correct Python3 version and project folder structure.
-Please copy the follow instructions(where applicable) and paste directly into your linux terminal.
+This application is run via the terminal and requires the correct Python3 version and project folder structure.<br>
+<b>Please copy the follow instructions(where applicable) and paste directly into your linux terminal.</b>
 
 <details>
 <summary><b>Unix based Systems - Linux & macOS</b></summary>
@@ -325,13 +331,13 @@ Please copy the follow instructions(where applicable) and paste directly into yo
 
 2.  Open a WSL terminal
 3.  Clone the GitHub repository (select only 1 method):</br>
-    SSH
+    via SSH
 
     ```bash
     git clone git@github.com:jay-parkin/Terminal-App-Python.git
     ```
 
-    HTTPS
+    via HTTPS
 
     ```bash
     git clone https://github.com/jay-parkin/Terminal-App-Python.git
@@ -356,6 +362,39 @@ Please copy the follow instructions(where applicable) and paste directly into yo
     ```
 
 </details>
+
+### Failed to Install
+
+If at any point the installation fails, A common issue is `pip` wasn't installed correctly when Python3 was installed.
+The following instructions should help get pip installed correctly.
+
+<details>
+<summary><b>Show crash log</b></summary>
+
+```
+Current Python installed satisfies the required version: 3.10.12.
+Proceeding to install required dependencies....
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.10-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /home/{username}/Github/Terminal-App-Python/src/myapp/.venv/bin/python3
+
+Virtual environment created successfully.
+./scripts/init_venv.sh: line 17: ./myapp/.venv/bin/activate: No such file or directory
+./scripts/init_dependencies.sh: line 20: pip: command not found
+Failed to install requirements.
+Please try removing .venv and try again.
+```
+
+</details>
+<br>
+1.
 
 ## Usage
 
