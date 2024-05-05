@@ -95,7 +95,7 @@ while choice != "x":
 ```
 
 </details>
-</br>
+<br>
 
 #### <b>Recipe Creation:</b>
 
@@ -382,8 +382,8 @@ This feature consists of a few functions which work together to pull api request
    - Inputs: Recipe ID.
    - Outputs: A Recipe object filled with all relevant data, such as ingredients and instructions.
 
-      <details>
-      <summary>Click to expand code</summary>
+    <details>
+    <summary>Click to expand code</summary>
 
    ```python
     # Create a recipes from id > pull https://rapidapi.com/spoonacular/api/recipe-food-nutrition
@@ -443,7 +443,7 @@ This feature consists of a few functions which work together to pull api request
             print("No recipes found..")
    ```
 
-      </details>
+   </details>
    <br>
 
 #### <b>Generate Recipe Using My Ingredients:</b>
@@ -458,9 +458,9 @@ This feature consists of a few functions which work together to pull api request
 - Import the following modules:
   - `import json`
   - https://pypi.org/project/requests/
-  ```bash
-  pip install requests
-  ```
+    ```bash
+    pip install requests
+    ```
 
 1. recipe_by_ingredient_request(ingredients)
 
@@ -657,6 +657,14 @@ class Ingredients:
 </p>
 
 This feature manages recipes stored in a CSV file. <br>It provides functionality to view all recipes, view a specific recipe, and delete a recipe from the collection.
+
+- Import the following modules:
+  - https://pypi.org/project/rich/
+    ```bash
+        pip install rich
+    ```
+  - `from rich.console import Console`
+  - `from rich.table import Table`
 
 `view_recipes(action)`
 This function acts as the entry point for interacting with recipes. It first reads all recipes from a CSV file using `read_recipes_from_csv()`. Then it calls `display_all_recipes()` to present a table of all recipes to the user, along with the specified action (view or delete). After displaying the recipes, it prompts the user to choose a recipe by number and then performs the appropriate action based on the user's input.
