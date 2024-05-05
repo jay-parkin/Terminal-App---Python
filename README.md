@@ -216,6 +216,7 @@ _<b>Submit Recipe</b>_
 
 </details>
 </br>
+
 _<b>Csv Functions</b>_
 
 The function write_recipes_to_csv(recipes, mode) is all about saving a list of recipes into a CSV file, complete with headers if they're not already there. Let's walk through what happens when you call this function:
@@ -273,6 +274,171 @@ def write_recipes_to_csv(recipes, mode):
 ```
 
 </details>
+<br>
+
+_<b>Add Random Recipe</b>_
+
+- Users can retrieve a random recipe from a vast database.
+- Provides comprehensive details about a recipe, such as ingredients, cooking methods, and nutritional information.
+- Robust error management to ensure the application handles API limits, network issues, and more gracefully.
+- Imports the requests module:
+  - https://pypi.org/project/requests/
+  ```bash
+  pip install requests
+  ```
+
+###### Usage `get_recipe_from_api(get_recipe_id(random_recipe_request()))`
+
+This feature consists of a few functions which work together to pull api requests and supports the DRY principal
+
+1. <b>random_recipe_request()</b>:
+
+   - Purpose: Fetches a random recipe from Spoonacular.
+   - Inputs: None.
+   - Outputs: A JSON object containing recipe details.
+   - Error Handling: Captures and logs errors related to network issues or API limitations.
+
+   <details>
+   <summary>Click to expand code</summary>
+
+   ```python
+    import requests
+
+    # Used to pull a random recipe using tags and an amount of recipes
+    def random_recipe_request():
+        url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random"
+
+        # "chicken,beef" - tag examples
+        # querystring = {"tags":tag_list,"number":request_amount}
+        querystring = {"number":1}
+
+        headers = {
+            "X-RapidAPI-Key": "{YOUR-API-KEY}",
+            "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+        }
+
+        response = requests.get(url, headers=headers, params=querystring)
+   ```
+
+   </details>
+
+2. <b>get_recipe_id(data)</b>:
+
+   - Purpose: Extracts the recipe ID from the API response.
+   - Inputs: JSON data from `random_recipe_request()`.
+   - Outputs: A string representing the recipe ID or None if no recipes are found.
+
+   <details>
+   <summary>Click to expand code</summary>
+
+   ```python
+    # Find recipes id from the api > https://rapidapi.com/spoonacular/api/recipe-food-nutrition
+    def get_recipe_id(data):
+        response_data = data
+
+        # Extract title from the first recipe in the response
+        if "recipes" in response_data and len(response_data["recipes"]) > 0:
+            for recipe_data in response_data["recipes"]:
+                id = recipe_data.get("id", "n/a")
+
+            return id
+   ```
+
+   </details>
+
+3. <b>get_recipe_by_id(recipe_id)</b>:
+
+   - Purpose: Retrieves detailed information for a specific recipe ID.
+   - Inputs: Recipe ID as a string.
+   - Outputs: JSON object containing the full recipe information.
+
+   <details>
+   <summary>Click to expand code</summary>
+
+   ```python
+    def get_recipe_by_id(id):
+    url = f"https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/{id}/information"
+
+    headers = {
+        "X-RapidAPI-Key": "{YOUR-API-KEY}",
+        "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    return response.json()
+   ```
+
+   </details>
+
+4. <b>get_recipe_from_api(id)</b>:
+
+   - Purpose: Constructs a complete recipe object from the recipe ID.
+   - Inputs: Recipe ID.
+   - Outputs: A Recipe object filled with all relevant data, such as ingredients and instructions.
+
+   <details>
+   <summary>Click to expand code</summary>
+
+   ```python
+    # Create a recipes from id > pull https://rapidapi.com/spoonacular/api/recipe-food-nutrition
+    def get_recipe_from_api(id):
+
+        recipe_data = get_recipe_by_id(id)
+
+        found_recipe = []
+        # Extract title from the first recipe in the response
+        if recipe_data:
+            # recipe name
+            title = recipe_data.get("title", "n/a")
+            print(f"Adding: {title}")
+
+            # add ingredients
+            ingredients = []
+            name = ""
+            amount = ""
+            unit = ""
+            extendedIngredients = recipe_data.get("extendedIngredients", [])
+
+            for ingredient in extendedIngredients:
+                name = ingredient.get("nameClean")
+                amount = ingredient.get("amount")
+                unit = ingredient.get("unit")
+
+                ingredients.append(Ingredients(name, amount, unit))
+
+            # method > steps
+            methods = []
+            length = 0 # Length of each step
+            ready_in_minutes = 0
+            analyzed_instructions = recipe_data.get("analyzedInstructions", [])
+
+            # move through get instuction and add to step
+            for instruction in analyzed_instructions:
+                steps = instruction.get("steps", [])
+                for step in steps:
+                    methods.append(word_wrap(step["step"]))
+                    # collect length as well
+                    # get ready time from the length of each step
+                    # ready_time = recipe_data.get("readyInMinutes", "n/a")
+                    length = step["length"]["number"] if "length" in step else 0
+                    ready_in_minutes += length
+
+            serves = recipe_data.get("servings", "n/a")
+
+            description = remove_html_tags(recipe_data.get("summary", title))
+
+            # #  Create a Recipes object
+            found_recipe = Recipes(title, ready_in_minutes, serves, description)
+            found_recipe.add_ingredients(ingredients)
+            found_recipe.read_csv_method(methods)
+
+            return found_recipe
+        else:
+            print("No recipes found..")
+   ```
+
+   </details>
 
 ## Getting Started
 
@@ -362,8 +528,10 @@ This application is run via the terminal and requires the correct Python3 versio
     ```
 
 </details>
+</br>
 
-### Failed to Install
+<details>
+<summary><b>Failed to Install</b></summary>
 
 If at any point the installation fails, A common issue is `pip` wasn't installed correctly when Python3 was installed.
 The following instructions should help get pip installed correctly.
@@ -396,6 +564,8 @@ Please try removing .venv and try again.
 
 ### Solution
 
+This solution is following the instructions at https://pip.pypa.io/en/stable/installation/
+
 1. Navigate to /scripts directory
 
    ```bash
@@ -407,7 +577,7 @@ Please try removing .venv and try again.
    python3 get-pip.py
    ```
 
-This will result in pip being downloaded
+This will result in pip being downloaded correctly
 
 ```bash
 Defaulting to user installation because normal site-packages is not writeable
@@ -418,6 +588,8 @@ Downloading pip-24.0-py3-none-any.whl (2.1 MB)
 Installing collected packages: pip
 Successfully installed pip-24.0
 ```
+
+</details>
 
 ## Usage
 
