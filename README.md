@@ -217,7 +217,7 @@ _<b>Submit Recipe</b>_
 </details>
 </br>
 
-_<b>Csv Functions</b>_
+#### <b>Csv Functions:</b>
 
 The function write_recipes_to_csv(recipes, mode) is all about saving a list of recipes into a CSV file, complete with headers if they're not already there. Let's walk through what happens when you call this function:
 
@@ -276,7 +276,7 @@ def write_recipes_to_csv(recipes, mode):
 </details>
 <br>
 
-_<b>Add Random Recipe</b>_
+#### <b>Add Random Recipe:</b>
 
 - Users can retrieve a random recipe from a vast database.
 - Provides comprehensive details about a recipe, such as ingredients, cooking methods, and nutritional information.
@@ -439,6 +439,8 @@ This feature consists of a few functions which work together to pull api request
    ```
 
    </details>
+
+#### <b>Generate Recipe Using My Ingredients:</b>
 
 ## Getting Started
 
