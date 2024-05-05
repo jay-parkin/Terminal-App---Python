@@ -1,20 +1,5 @@
 # Digital Dish created by Python
 
-- [Description](#description)
-- [Key Features](#key-features)
-- [Source Control](#source-control)
-- [Features](#features)
-- [Getting Started](#getting-started)
-  - [Prerequisties](#prerequisties)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [API Reference](#api-reference)
-  - [Description](#description-1)
-  - [Get Recipe Information](#get-recipe-information)
-  - [Get Random Recipes](#get-random-recipes)
-  - [Get Search Recipes by Ingredients](#get-search-recipes-by-ingredients)
-- [Credits](#credits)
-
 ## Description
 
 Digital Dish is like having a personal assistant for food lovers and home cooks. It’s designed in Python to be user-friendly and packed with great features that make managing, finding, and cooking amazing recipes a breeze.
