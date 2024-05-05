@@ -278,10 +278,15 @@ def write_recipes_to_csv(recipes, mode):
 
 #### <b>Add Random Recipe:</b>
 
+<p align="center">
+    <img src="docs/screenshots/random_recipe.JPG"/>
+</p>
+
 - Users can retrieve a random recipe from a vast database.
 - Provides comprehensive details about a recipe, such as ingredients, cooking methods, and nutritional information.
 - Robust error management to ensure the application handles API limits, network issues, and more gracefully.
-- Imports the requests module:
+- Import the following modules:
+  - `import json`
   - https://pypi.org/project/requests/
   ```bash
   pip install requests
@@ -377,8 +382,8 @@ This feature consists of a few functions which work together to pull api request
    - Inputs: Recipe ID.
    - Outputs: A Recipe object filled with all relevant data, such as ingredients and instructions.
 
-   <details>
-   <summary>Click to expand code</summary>
+      <details>
+      <summary>Click to expand code</summary>
 
    ```python
     # Create a recipes from id > pull https://rapidapi.com/spoonacular/api/recipe-food-nutrition
@@ -438,9 +443,406 @@ This feature consists of a few functions which work together to pull api request
             print("No recipes found..")
    ```
 
-   </details>
+      </details>
+   <br>
 
 #### <b>Generate Recipe Using My Ingredients:</b>
+
+<p align="center">
+    <img src="docs/screenshots/recipe_by_ingredient.JPG"/>
+</p>
+
+- This project utilises the Spoonacular Recipe API(details found at [API Reference](#api-reference)) to fetch recipes based on a list of ingredients provided by the user.
+- Users can then select recipes to view more details and save them for later reference.
+
+- Import the following modules:
+  - `import json`
+  - https://pypi.org/project/requests/
+  ```bash
+  pip install requests
+  ```
+
+1. recipe_by_ingredient_request(ingredients)
+
+   - Purpose: Makes an API request to fetch recipes based on the provided ingredients.
+   - Parameters:
+     - ingredients: A string containing comma-separated ingredient names.
+   - Returns: JSON response containing recipe data.
+
+    <details>
+   <summary>Click to expand code</summary>
+
+   ```python
+   import requests
+
+    def recipe_by_ingredient_request(ingredients):
+        url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients"
+
+        querystring = {
+            "ingredients": ingredients,
+            "number":"5",
+            "ignorePantry":"true",
+            "ranking":"1"
+        }
+
+        headers = {
+            "X-RapidAPI-Key": "{YOUR-API-KEY}",
+            "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+        }
+
+        response = requests.get(url, headers=headers, params=querystring)
+
+        return response.json()
+   ```
+
+    </details>
+
+2. recipe_by_ingredient()
+
+   - Purpose: Allows users to select recipes from the fetched data and save them.
+   - Workflow:
+     - Reads ingredients from a CSV file.
+     - Calls recipe_by_ingredient_request() to fetch recipes.
+     - Displays a list of available recipes and prompts the user to select one.
+     - Saves the selected recipe to a CSV file for later reference.
+
+    <details>
+    <summary>Click to expand code</summary>
+
+   ```python
+   # Loads stored ingredients and pulls 5 random recipes from api
+   def recipe_by_ingredient():
+       # list of 5 recipe titles. + cancel = 0
+       # which recipe would you like to view?
+           # get id and search in api
+           # save recipe
+       # remove from list of 5
+
+       # Load ingredients
+       ingredients_set = set() # Set of ingredients
+       ingredients_set = read_ingredients_from_csv(ingredients_set)
+
+       ingredients = ""
+       # Extract name from ingredients
+       for ingredient_name in ingredients_set:
+           ingredients += ingredient_name.get_name() +","
+
+       response_data = recipe_by_ingredient_request(ingredients)
+       # response_data = load_recipe_data("new.json") # used for testing
+
+       # Extract title from all recipes in the response
+
+       removed_recipe = []
+       count = []
+       choice = ""
+
+
+       while True:
+           print("")
+           table = Table(title="Recipe By Ingredients",
+                   title_justify="left",
+                   title_style="bold")
+
+           table.add_column(width=3)
+           table.add_column("Options",justify="left",width=50)
+
+           # Add all recipes from api to a list
+           available_recipes = []
+           for recipe in response_data:
+               if recipe.get("title") not in removed_recipe:
+                   available_recipes.append(recipe)
+
+           # create a range starting 1 to the length of recipes
+           count = list(range(1, len(available_recipes) + 1))
+
+           for i, recipe in enumerate(available_recipes):
+               table.add_row(f"{count[i]}.",f"{recipe['title']}")
+
+           table.add_row("0.","Back")
+           console.print(table)
+
+           choice = input("Enter which Recipe to Add: ")
+
+           if choice == "0":
+               break
+
+           # append choice
+           # Make sure the choice is a number and more than 0 and less then count length
+           if choice.isdigit() and 0 < int(choice) <= len(count):
+               index = int(choice) - 1 # started at 1
+
+               if 0 <= index < len(available_recipes):
+                   selected_title = available_recipes[index]["title"]
+                   removed_recipe.append(selected_title)
+
+                   # add recipe to stored list
+                   id = available_recipes[index]["id"]
+
+
+                   # save to csv file
+                   recipe = Recipes()
+                   recipe = get_recipe_from_api(id)
+
+                   write_recipes_to_csv([recipe], "a")
+               else:
+                   print("Invalid input. Please try again.")
+           else:
+               print("Invalid input. Please try again.")
+
+           # Clear init values
+           choice = ""
+   ```
+
+    </details>
+
+##### Dependencies:
+
+- read_ingredients_from_csv(): Reads ingredients from a CSV file.
+- write_recipes_to_csv(): Writes recipes to a CSV file.
+- get_recipe_from_api(): Fetches detailed recipe data from the API
+
+<br>
+
+#### <b>My Ingredients:</b>
+
+<p align="center">
+    <img src="docs/screenshots/add_ingredient.JPG"/>
+    <img src="docs/screenshots/my_ingredients.JPG"/>
+</p>
+
+This feature allows users to add new ingredients, view existing ingredients, and save ingredients to a CSV file.
+
+- These ingredients are stored locally to `data/my_ingredients.csv`
+- All stored ingredients are reference when the user accesses the previous feature `Generate Recipe Using My Ingredient`.
+
+<b>Ingredients Class</b>:
+Represents ingredients with attributes for name, amount, and unit.<br>
+<b>Menu System</b>:
+Provides a menu-driven interface for users to interact with ingredient management functions.
+<b>Functionality</b>:
+
+- Add Ingredient: Allows users to input ingredient details and creates an Ingredients object.
+- View Ingredients: Displays a table of ingredients with their details.
+- Store Ingredients: Saves ingredients to a CSV file for future reference.
+
+<details>
+<summary>Click to expand code</summary>
+
+```python
+class Ingredients:
+    def __init__(self, name, amount, unit):
+        self._name = name
+        self._amount = amount
+        self._unit = unit
+
+    def store_csv_info(self):
+        return f"{self._name},{self._amount},{self._unit}"
+
+    def get_name(self):
+        return self._name
+
+    def get_amount(self):
+        return self._amount
+
+    def get_unit(self):
+        return self._unit
+```
+
+</details>
+
+#### <b>View & Delete Recipes:</b>
+
+<p align="center">
+    <img src="docs/screenshots/view_recipe.JPG"/>
+</p>
+
+This feature manages recipes stored in a CSV file. <br>It provides functionality to view all recipes, view a specific recipe, and delete a recipe from the collection.
+
+`view_recipes(action)`
+This function acts as the entry point for interacting with recipes. It first reads all recipes from a CSV file using `read_recipes_from_csv()`. Then it calls `display_all_recipes()` to present a table of all recipes to the user, along with the specified action (view or delete). After displaying the recipes, it prompts the user to choose a recipe by number and then performs the appropriate action based on the user's input.
+
+- Purpose: Manage the process of viewing or deleting recipes based on user input.
+- Steps:
+  - Read recipes from CSV file.
+  - Display all recipes with a table.
+  - Prompt user for choice and validate input.
+  - Perform the selected action (view or delete).
+
+<details>
+<summary>Click to expand code</summary>
+
+```python
+def view_recipes(action):
+    all_recipes = read_recipes_from_csv()
+
+    display_all_recipes(all_recipes, action)
+
+    try:
+        choice = int(input(f"Enter which Recipe to {action}: "))
+
+        # Check user input is within list range
+        if choice == 0 or choice > len(all_recipes):
+            print(f"Recipe {choice} doesn't exist.")
+
+        # View recipe
+        elif action == "View":
+            display_recipe(choice, all_recipes)
+
+        # Delete recipe
+        elif action == "Delete":
+            delete_recipe(choice, all_recipes)
+
+    except ValueError:
+        print("Error - Please enter a number.")
+```
+
+</details>
+<br>
+
+`display_all_recipes(all_recipes, action)`
+This function displays a summary of all recipes available in your system. It formats the recipes into a table, showing their numbers, names, and brief descriptions. <br>The action parameter is used to customise the table's title (e.g., "View Recipes" or "Delete Recipes").
+
+- Purpose: Provide an overview of all available recipes.
+- Steps:
+  - Format recipes into a table.
+  - Display the table with appropriate headers and data.
+
+<details>
+<summary>Click to expand code</summary>
+
+```python
+# Allow the user to view all recipes on the console
+def display_all_recipes(all_recipes, action):
+    print("")
+    # Display recipes in a table format
+    table = Table(title=f"{action} Recipes",
+                        title_style="bold",
+                        title_justify="left")
+    table.add_column("No.", justify="left", min_width=3)
+    table.add_column("Name", justify="left", width=30)
+    table.add_column("Description", justify="left", width=65)
+
+    count = 0
+    for recipe in all_recipes:
+        count += 1
+
+        name = get_first_sentence(recipe.get_name())
+        description = get_first_sentence(recipe.get_description())
+
+        table.add_row(f"{count}", f"{name}", f"{description}")
+
+    console.print(table)
+```
+
+</details>
+<br>
+
+`display_recipe(choice, all_recipes)`
+This function is responsible for showing detailed information about a specific recipe chosen by the user. <br>It formats and displays the recipe's name, ingredients, preparation method, and description in a structured manner using the Table class from your environment.
+
+- Purpose: Show detailed information about a selected recipe.
+- Steps:
+  - Format and display the recipe's basic information (name, serves, etc.).
+  - Display ingredients in a table format.
+  - Display cooking method (steps and descriptions) in a table format.
+  - Display recipe description.
+
+<p align="center">
+    <img src="docs/screenshots/view_recipe_details.JPG"/>
+</p>
+
+<details>
+<summary>Click to expand code</summary>
+
+```python
+# Display a single recipe after being selcted
+def display_recipe(choice, all_recipes):
+    print("")
+    # name, ingredients, prep_time, cook_time, serves, steps, description
+    # layout a nice display of the recipe selected
+
+    # Title of the entire recipe
+    table_title = Table(title=f"{all_recipes[choice - 1].get_name()}",
+                        title_style="bold",
+                        title_justify="left")
+    table_title.add_column("Ready In Minutes")
+    table_title.add_column("Servings")
+    table_title.add_row(f"{all_recipes[choice - 1].get_ready_in_minutes()}",
+                        f"{all_recipes[choice - 1].get_serves()}")
+
+    console.print(table_title)
+
+    # start of the ingredients table
+    print("")
+    table_ingredient = Table(title="Ingredients",
+                        title_style="bold",
+                        title_justify="left")
+    table_ingredient.add_column("Name", justify="left")
+    table_ingredient.add_column("Amount", justify="left")
+    table_ingredient.add_column("Unit / Sizing", justify="left")
+
+    all_recipes[choice - 1].display_ingredient_info(table_ingredient, console)
+
+    # Start of the method table
+    print("")
+    table_method = Table(title="Method",
+                        title_style="bold",
+                        title_justify="left")
+
+    table_method.add_column("Steps", justify="left")
+    table_method.add_column("Description", justify="left")
+    # Pass itselfs through a display method
+    all_recipes[choice - 1].display_methods(all_recipes[choice - 1].get_methods(), table_method, console)
+
+    print("")
+    table_description = Table()
+    table_description.add_column("Description",justify="left",style="bold",width=100)
+
+    table_description.add_row(f"{all_recipes[choice - 1].get_description()}")
+
+    console.print(table_description)
+```
+
+</details>
+<br>
+
+`delete_recipe(choice, all_recipes)`
+When the user chooses to delete a recipe, this function handles the confirmation process and updates the recipe's status accordingly. It confirms the user's choice and then marks the selected recipe as inactive in the system (typically by setting a status flag).
+
+- Purpose: Handle the deletion of a recipe from the system.
+- Steps:
+  - Confirm user's intention to delete.
+  - Mark the selected recipe as inactive or delete it from the system.
+  - Update the CSV file to reflect the changes(excluding all recipes with an inactive status).
+
+<details>
+<summary>Click to expand code</summary>
+
+```python
+# Remove a recipe from the list
+def delete_recipe(choice, all_recipes):
+    print(f"\nDeleting Recipe: {all_recipes[choice - 1].get_name()}")
+
+    print("1: Yes")
+    print("2: No")
+
+    # Confirm the choice to delete
+    choice_yes = input("Are you sure? ")
+
+    if choice_yes == "1":
+        # Confirmed to delete
+        print(f"Deleting...")
+        # Set recipe inactive
+        all_recipes[choice - 1].set_status_inactive()
+
+        # Write list of recipes without the inacive recipe selected
+        write_recipes_to_csv(all_recipes, "w")
+```
+
+</details>
+<br>
+
+These functions work together to provide a user-friendly interface for managing recipes, displaying information in a structured format, and ensuring data integrity by handling deletions appropriately.
 
 ## Getting Started
 
