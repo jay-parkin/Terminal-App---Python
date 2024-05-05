@@ -1044,6 +1044,42 @@ def delete_recipe(choice, all_recipes):
 
 These functions work together to provide a user-friendly interface for managing recipes, displaying information in a structured format, and ensuring data integrity by handling deletions appropriately.
 
+## Code Logic - Flow Chart
+
+<p align="center">
+    <img src="docs/planning/flow_chart.jpg"/>
+</p>
+
+## Implementation Plan
+
+<p align="center">
+    <img src="docs/planning/preplanning_gantt.JPG"/>
+</p>
+
+#### Checklist
+
+This checklist aims to achieve a clear and straight to the point approach.
+<b>Main Functions</b>
+
+<p align="center">
+    <img src="docs/planning/checklist_1.JPG"/>
+</p>
+<p align="center">
+    <img src="docs/planning/checklist_2.JPG"/>
+</p>
+
+<b>Recipe Object</b>
+
+<p align="center">
+    <img src="docs/planning/checklist_recipe.JPG"/>
+</p>
+
+<b>Ingredient Object</b>
+
+<p align="center">
+    <img src="docs/planning/checklist_ingredient.JPG"/>
+</p>
+
 ## API Reference
 
 ###### Full Attribution: _I didn't write this api, it comes from the amazing source found below_
