@@ -393,8 +393,31 @@ Please try removing .venv and try again.
 ```
 
 </details>
-<br>
-1.
+
+### Solution
+
+1. Navigate to /scripts directory
+
+   ```bash
+   cd scripts
+   ```
+
+2. Run the follow command
+   ```bash
+   python3 get-pip.py
+   ```
+
+This will result in pip being downloaded
+
+```bash
+Defaulting to user installation because normal site-packages is not writeable
+Collecting pip
+  Downloading pip-24.0-py3-none-any.whl.metadata (3.6 kB)
+Downloading pip-24.0-py3-none-any.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 6.9 MB/s eta 0:00:00
+Installing collected packages: pip
+Successfully installed pip-24.0
+```
 
 ## Usage
 
