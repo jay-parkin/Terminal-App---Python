@@ -462,7 +462,7 @@ This feature consists of a few functions which work together to pull api request
     pip install requests
     ```
 
-1. recipe_by_ingredient_request(ingredients)
+1. <b>recipe_by_ingredient_request(ingredients)</b>
 
    - Purpose: Makes an API request to fetch recipes based on the provided ingredients.
    - Parameters:
@@ -497,7 +497,7 @@ This feature consists of a few functions which work together to pull api request
 
     </details>
 
-2. recipe_by_ingredient()
+2. <b>recipe_by_ingredient()</b>
 
    - Purpose: Allows users to select recipes from the fetched data and save them.
    - Workflow:
@@ -597,9 +597,9 @@ This feature consists of a few functions which work together to pull api request
 
 ##### Dependencies:
 
-- read_ingredients_from_csv(): Reads ingredients from a CSV file.
-- write_recipes_to_csv(): Writes recipes to a CSV file.
-- get_recipe_from_api(): Fetches detailed recipe data from the API
+- `read_ingredients_from_csv()`: Reads ingredients from a CSV file.
+- `write_recipes_to_csv()`: Writes recipes to a CSV file.
+- `get_recipe_from_api()`: Fetches detailed recipe data from the API
 
 <br>
 
@@ -618,7 +618,7 @@ This feature allows users to add new ingredients, view existing ingredients, and
 <b>Ingredients Class</b>:
 Represents ingredients with attributes for name, amount, and unit.<br>
 <b>Menu System</b>:
-Provides a menu-driven interface for users to interact with ingredient management functions.
+Provides a menu-driven interface for users to interact with ingredient management functions.<br>
 <b>Functionality</b>:
 
 - Add Ingredient: Allows users to input ingredient details and creates an Ingredients object.
@@ -661,13 +661,14 @@ This feature manages recipes stored in a CSV file. <br>It provides functionality
 - Import the following modules:
   - https://pypi.org/project/rich/
     ```bash
-        pip install rich
+    pip install rich
     ```
   - `from rich.console import Console`
   - `from rich.table import Table`
 
-`view_recipes(action)`
-This function acts as the entry point for interacting with recipes. It first reads all recipes from a CSV file using `read_recipes_from_csv()`. Then it calls `display_all_recipes()` to present a table of all recipes to the user, along with the specified action (view or delete). After displaying the recipes, it prompts the user to choose a recipe by number and then performs the appropriate action based on the user's input.
+<br>
+<b>view_recipes(action)</b><br>
+This function acts as the entry point for interacting with recipes.<br>It first reads all recipes from a CSV file using `read_recipes_from_csv()`.<br>Then it calls `display_all_recipes()` to present a table of all recipes to the user, along with the specified action (view or delete). After displaying the recipes, it prompts the user to choose a recipe by number and then performs the appropriate action based on the user's input.
 
 - Purpose: Manage the process of viewing or deleting recipes based on user input.
 - Steps:
@@ -707,8 +708,9 @@ def view_recipes(action):
 </details>
 <br>
 
-`display_all_recipes(all_recipes, action)`
-This function displays a summary of all recipes available in your system. It formats the recipes into a table, showing their numbers, names, and brief descriptions. <br>The action parameter is used to customise the table's title (e.g., "View Recipes" or "Delete Recipes").
+<br>
+<b>display_all_recipes(all_recipes, action)</b><br>
+This function displays a summary of all recipes available in your system.<br>It formats the recipes into a table, showing their numbers, names, and brief descriptions.<br>The action parameter is used to customise the table's title (e.g., "View Recipes" or "Delete Recipes").
 
 - Purpose: Provide an overview of all available recipes.
 - Steps:
@@ -745,8 +747,9 @@ def display_all_recipes(all_recipes, action):
 </details>
 <br>
 
-`display_recipe(choice, all_recipes)`
-This function is responsible for showing detailed information about a specific recipe chosen by the user. <br>It formats and displays the recipe's name, ingredients, preparation method, and description in a structured manner using the Table class from your environment.
+<br>
+<b>display_recipe(choice, all_recipes)</b><br>
+This function is responsible for showing detailed information about a specific recipe chosen by the user.<br>It formats and displays the recipe's name, ingredients, preparation method, and description in a structured manner using the Table class from your environment.
 
 - Purpose: Show detailed information about a selected recipe.
 - Steps:
@@ -814,8 +817,9 @@ def display_recipe(choice, all_recipes):
 </details>
 <br>
 
-`delete_recipe(choice, all_recipes)`
-When the user chooses to delete a recipe, this function handles the confirmation process and updates the recipe's status accordingly. It confirms the user's choice and then marks the selected recipe as inactive in the system (typically by setting a status flag).
+<br>
+<b>delete_recipe(choice, all_recipes)</b><br>
+When the user chooses to delete a recipe, this function handles the confirmation process and updates the recipe's status accordingly.<br>It confirms the user's choice and then marks the selected recipe as inactive in the system (typically by setting a status flag).
 
 - Purpose: Handle the deletion of a recipe from the system.
 - Steps:
