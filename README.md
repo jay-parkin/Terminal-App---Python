@@ -31,12 +31,199 @@ Digital Dish is like having a personal assistant for food lovers and home cooks.
 <img src="docs/screenshots/welcome.JPG"/>
 </p>
 
-### Source Control
+## Source Control
 
 - GitHub Repository - [https://github.com/jay-parkin/Terminal-App-Python](https://github.com/jay-parkin/Terminal-App-Python)
 - Clone Repository - `git clone https://github.com/jay-parkin/Terminal-App-Python.git`
+  <br>
 
-### Features
+## Code Style Guide
+
+### Style Guide
+
+This project sticks to the `PEP 8` style guide for Python code, which sets standards for writing neat, easy-to-read, and consistent Python code.<br>
+This can be found at https://peps.python.org/pep-0008/
+
+Here are the guidelines as bullet points:
+
+- Indentation: I used a 1 tab indentation to stay consistent with code that is already indented with tabs.
+- Line Length: I limit lines to a maximum of 79 characters to make sure they're easy to read without scrolling horizontally.
+- Imports: Each module is imported on a separate line, and each import stands on its own line.
+- Whitespace: I use whitespace thoughtfully for readability, such as separating functions and classes with two blank lines.
+- Naming Conventions:
+  - Variables, functions, and methods use lowercase with underscores (snake_case).
+  - Classes use CamelCase (capitalising the first letter of each word) without underscores.
+  - Constants use all uppercase with underscores (ALL_CAPS).
+  - Comments: I used clear and concise comments to explain complex code or document function purposes. <br>Our comment formatting and placement follow PEP 8 guidelines.
+- Function and Method Definitions: I use descriptive names for functions and methods.<br>Detailed explanations of their behavior and parameters are provided using docstrings.
+- File Encoding: I default to using UTF-8 as the encoding for Python source files.
+
+Through out the entire application I was adhering to the PEP 8 style guide as closely as I can.
+
+## Getting Started
+
+### Prerequisties
+
+- Python 3.10.12 or [higher](https://www.python.org/downloads/)
+
+### Installation
+
+Follow the instructions below to install the Digital Dish application.<br>
+This application is run via the terminal and requires the correct Python3 version and project folder structure.<br>
+<b>Please copy the follow instructions(where applicable) and paste directly into your linux terminal.</b>
+
+<details>
+<summary><b>Unix based Systems - Linux & macOS</b></summary>
+
+1.  Open a Terminal
+2.  Clone the GitHub repository:</br>
+    via SSH
+
+    ```bash
+    git clone git@github.com:jay-parkin/Terminal-App-Python.git
+    ```
+
+    via HTTPS
+
+    ```bash
+    git clone https://github.com/jay-parkin/Terminal-App-Python.git
+    ```
+
+3.  Navigate to `/src` directory in the cloned repository:
+
+    ```bash
+    cd Terminal-App-Python/src
+    ```
+
+4.  Created an executable from the `run.sh` shell script:
+
+    ```bash
+    chmod +x run.sh
+    ```
+
+5.  Run the `run.sh` script to start the application
+
+    ```bash
+    ./run.sh
+    ```
+
+</details>
+</br>
+
+<details>
+<summary><b>Windows</b></summary>
+
+1.  Install WSL via [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+2.  Open a WSL terminal
+3.  Clone the GitHub repository (select only 1 method):</br>
+    via SSH
+
+    ```bash
+    git clone git@github.com:jay-parkin/Terminal-App-Python.git
+    ```
+
+    via HTTPS
+
+    ```bash
+    git clone https://github.com/jay-parkin/Terminal-App-Python.git
+    ```
+
+4.  Navigate to `/src` directory in the cloned repository:
+
+    ```bash
+    cd Terminal-App-Python/src
+    ```
+
+5.  Created an executable from the `run.sh` shell script:
+
+    ```bash
+    chmod +x run.sh
+    ```
+
+6.  Run the `run.sh` script to start the application
+
+    ```bash
+    ./run.sh
+    ```
+
+</details>
+</br>
+
+<details>
+<summary><b>Failed to Install</b></summary>
+
+If at any point the installation fails, A common issue is `pip` wasn't installed correctly when Python3 was installed.
+The following instructions should help get pip installed correctly.
+
+<details>
+<summary><b>Show crash log</b></summary>
+
+```
+Current Python installed satisfies the required version: 3.10.12.
+Proceeding to install required dependencies....
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.10-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /home/{username}/Github/Terminal-App-Python/src/myapp/.venv/bin/python3
+
+Virtual environment created successfully.
+./scripts/init_venv.sh: line 17: ./myapp/.venv/bin/activate: No such file or directory
+./scripts/init_dependencies.sh: line 20: pip: command not found
+Failed to install requirements.
+Please try removing .venv and try again.
+```
+
+</details>
+
+### Solution
+
+This solution is following the instructions at https://pip.pypa.io/en/stable/installation/
+
+1. Navigate to /scripts directory
+
+   ```bash
+   cd scripts
+   ```
+
+2. Run the follow command
+   ```bash
+   python3 get-pip.py
+   ```
+
+This will result in pip being downloaded correctly
+
+```bash
+Defaulting to user installation because normal site-packages is not writeable
+Collecting pip
+  Downloading pip-24.0-py3-none-any.whl.metadata (3.6 kB)
+Downloading pip-24.0-py3-none-any.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 6.9 MB/s eta 0:00:00
+Installing collected packages: pip
+Successfully installed pip-24.0
+```
+
+</details>
+
+## Dependencies
+
+This application uses the following Python libraries:
+
+- [beautifulsoup4](https://pypi.org/project/beautifulsoup4/): Beautiful Soup is a library that makes it easy to scrape information from web pages. It sits atop an HTML or XML parser, providing Pythonic idioms for iterating, searching, and modifying the parse tree.
+- [markdown-it-py](https://pypi.org/project/markdown-it-py/): Python port of markdown-it. Markdown parsing, done right!
+- [pyreadline3](https://pypi.org/project/pyreadline3/): The pyreadline package is a python implementation of GNU readline functionality it is based on the ctypes based UNC readline package by Gary Bishop.
+- [requests](https://pypi.org/project/requests/): Requests is a simple, yet elegant, HTTP library.
+- [rich](https://rich.readthedocs.io/en/stable/introduction.html): Rich is a Python library for writing rich text (with color and style) to the terminal, and for displaying advanced content such as tables, markdown, and syntax highlighted code.
+
+These can be found in the `requirements.txt` and will be installed upon running the run.sh shell script.
+
+## Features
 
 The main menu is the main feature of the application which holds most of the operations.
 
@@ -97,7 +284,7 @@ while choice != "x":
 </details>
 <br>
 
-#### <b>Recipe Creation:</b>
+### <b>Recipe Creation:</b>
 
 _<b>New Recipe</b>_
 
@@ -217,7 +404,7 @@ _<b>Submit Recipe</b>_
 </details>
 </br>
 
-#### <b>Csv Functions:</b>
+### <b>Csv Functions:</b>
 
 The function write_recipes_to_csv(recipes, mode) is all about saving a list of recipes into a CSV file, complete with headers if they're not already there. Let's walk through what happens when you call this function:
 
@@ -276,7 +463,7 @@ def write_recipes_to_csv(recipes, mode):
 </details>
 <br>
 
-#### <b>Add Random Recipe:</b>
+### <b>Add Random Recipe:</b>
 
 <p align="center">
     <img src="docs/screenshots/random_recipe.JPG"/>
@@ -292,7 +479,7 @@ def write_recipes_to_csv(recipes, mode):
   pip install requests
   ```
 
-###### Usage `get_recipe_from_api(get_recipe_id(random_recipe_request()))`
+#### Usage `get_recipe_from_api(get_recipe_id(random_recipe_request()))`
 
 This feature consists of a few functions which work together to pull api requests and supports the DRY principal
 
@@ -446,7 +633,7 @@ This feature consists of a few functions which work together to pull api request
    </details>
    <br>
 
-#### <b>Generate Recipe Using My Ingredients:</b>
+### <b>Generate Recipe Using My Ingredients:</b>
 
 <p align="center">
     <img src="docs/screenshots/recipe_by_ingredient.JPG"/>
@@ -595,7 +782,7 @@ This feature consists of a few functions which work together to pull api request
 
     </details>
 
-##### Dependencies:
+#### Dependencies:
 
 - `read_ingredients_from_csv()`: Reads ingredients from a CSV file.
 - `write_recipes_to_csv()`: Writes recipes to a CSV file.
@@ -603,7 +790,7 @@ This feature consists of a few functions which work together to pull api request
 
 <br>
 
-#### <b>My Ingredients:</b>
+### <b>My Ingredients:</b>
 
 <p align="center">
     <img src="docs/screenshots/add_ingredient.JPG"/>
@@ -649,8 +836,9 @@ class Ingredients:
 ```
 
 </details>
+<br>
 
-#### <b>View & Delete Recipes:</b>
+### <b>View & Delete Recipes:</b>
 
 <p align="center">
     <img src="docs/screenshots/view_recipe.JPG"/>
@@ -856,159 +1044,6 @@ def delete_recipe(choice, all_recipes):
 
 These functions work together to provide a user-friendly interface for managing recipes, displaying information in a structured format, and ensuring data integrity by handling deletions appropriately.
 
-## Getting Started
-
-### Prerequisties
-
-- Python 3.10.12 or [higher](https://www.python.org/downloads/)
-
-### Installation
-
-Follow the instructions below to install the Digital Dish application.<br>
-This application is run via the terminal and requires the correct Python3 version and project folder structure.<br>
-<b>Please copy the follow instructions(where applicable) and paste directly into your linux terminal.</b>
-
-<details>
-<summary><b>Unix based Systems - Linux & macOS</b></summary>
-
-1.  Open a Terminal
-2.  Clone the GitHub repository:</br>
-    via SSH
-
-    ```bash
-    git clone git@github.com:jay-parkin/Terminal-App-Python.git
-    ```
-
-    via HTTPS
-
-    ```bash
-    git clone https://github.com/jay-parkin/Terminal-App-Python.git
-    ```
-
-3.  Navigate to `/src` directory in the cloned repository:
-
-    ```bash
-    cd Terminal-App-Python/src
-    ```
-
-4.  Created an executable from the `run.sh` shell script:
-
-    ```bash
-    chmod +x run.sh
-    ```
-
-5.  Run the `run.sh` script to start the application
-
-    ```bash
-    ./run.sh
-    ```
-
-</details>
-</br>
-
-<details>
-<summary><b>Windows</b></summary>
-
-1.  Install WSL via [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install)
-
-2.  Open a WSL terminal
-3.  Clone the GitHub repository (select only 1 method):</br>
-    via SSH
-
-    ```bash
-    git clone git@github.com:jay-parkin/Terminal-App-Python.git
-    ```
-
-    via HTTPS
-
-    ```bash
-    git clone https://github.com/jay-parkin/Terminal-App-Python.git
-    ```
-
-4.  Navigate to `/src` directory in the cloned repository:
-
-    ```bash
-    cd Terminal-App-Python/src
-    ```
-
-5.  Created an executable from the `run.sh` shell script:
-
-    ```bash
-    chmod +x run.sh
-    ```
-
-6.  Run the `run.sh` script to start the application
-
-    ```bash
-    ./run.sh
-    ```
-
-</details>
-</br>
-
-<details>
-<summary><b>Failed to Install</b></summary>
-
-If at any point the installation fails, A common issue is `pip` wasn't installed correctly when Python3 was installed.
-The following instructions should help get pip installed correctly.
-
-<details>
-<summary><b>Show crash log</b></summary>
-
-```
-Current Python installed satisfies the required version: 3.10.12.
-Proceeding to install required dependencies....
-The virtual environment was not created successfully because ensurepip is not
-available.  On Debian/Ubuntu systems, you need to install the python3-venv
-package using the following command.
-
-    apt install python3.10-venv
-
-You may need to use sudo with that command.  After installing the python3-venv
-package, recreate your virtual environment.
-
-Failing command: /home/{username}/Github/Terminal-App-Python/src/myapp/.venv/bin/python3
-
-Virtual environment created successfully.
-./scripts/init_venv.sh: line 17: ./myapp/.venv/bin/activate: No such file or directory
-./scripts/init_dependencies.sh: line 20: pip: command not found
-Failed to install requirements.
-Please try removing .venv and try again.
-```
-
-</details>
-
-### Solution
-
-This solution is following the instructions at https://pip.pypa.io/en/stable/installation/
-
-1. Navigate to /scripts directory
-
-   ```bash
-   cd scripts
-   ```
-
-2. Run the follow command
-   ```bash
-   python3 get-pip.py
-   ```
-
-This will result in pip being downloaded correctly
-
-```bash
-Defaulting to user installation because normal site-packages is not writeable
-Collecting pip
-  Downloading pip-24.0-py3-none-any.whl.metadata (3.6 kB)
-Downloading pip-24.0-py3-none-any.whl (2.1 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 6.9 MB/s eta 0:00:00
-Installing collected packages: pip
-Successfully installed pip-24.0
-```
-
-</details>
-
-## Usage
-
 ## API Reference
 
 ###### Full Attribution: _I didn't write this api, it comes from the amazing source found below_
@@ -1060,5 +1095,3 @@ Special diets/dietary requirements currently available include: vegan, vegetaria
 <p align="center">
     <img src="docs/api/api_stats.JPG"/>
 </p>
-
-## Credits
